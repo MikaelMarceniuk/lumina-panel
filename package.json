@@ -1,0 +1,20 @@
+{
+  "name": "lumina-panel",
+  "description": "Um sistema completo para pequenas empresas gerenciarem clientes, produtos e pedidos.",
+  "version": "1.0.0",
+  "repository": "https://github.com/MikaelMarceniuk/lumina-panel",
+  "author": "Mikael Marceniuk",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "start:dev:backend": "npm run start:dev --workspace apps/backend",
+    "start:dev:frontend": "npm run start:dev --workspace apps/frontend",
+    "start:dev": "concurrently \"npm run start:dev:backend\" \"npm run start:dev:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}

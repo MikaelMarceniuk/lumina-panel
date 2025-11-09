@@ -1,0 +1,24 @@
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm
+    volumes:
+      - ..:/workspace:cached
+    command: sleep infinity
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    container_name: lumina-db
+    restart: always
+    environment:
+      POSTGRES_USER: lumina
+      POSTGRES_PASSWORD: lumina
+      POSTGRES_DB: luminadb
+    ports:
+      - '5432:5432'
+    volumes:
+      - lumina-data:/var/lib/postgresql/data
+
+volumes:
+  lumina-data:

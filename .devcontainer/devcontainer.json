@@ -1,0 +1,21 @@
+{
+  "name": "lumina-panel",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "formulahendry.auto-tag-close",
+        "formulahendry.auto-rename-tag",
+        "csstools.postcss",
+        "bradlc.vscode-tailwindcss",
+        "prisma.prisma",
+        "vivaxy.vscode-conventional-commits",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "mhutchie.git-graph"
+      ]
+    }
+  }
+}
