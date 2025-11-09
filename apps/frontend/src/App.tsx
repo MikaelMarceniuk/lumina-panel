@@ -1,8 +1,13 @@
+import { BrowserRouter, Route, Routes } from 'react-router'
+import { SignInScreen } from './components/screens/sign-in.screen'
+
 const App = () => {
   return (
-    <div className="bg-primary h-screen w-screen">
-      <h1 className="text-primary-foreground">Hello World!</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/sign-in" element={<SignInScreen />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
