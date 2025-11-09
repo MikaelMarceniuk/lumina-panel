@@ -1,8 +1,8 @@
-function App() {
+const App = () => {
   return (
-    <>
-      <h1>Hello World!</h1>
-    </>
+    <div className="bg-primary h-screen w-screen">
+      <h1 className="text-primary-foreground">Hello World!</h1>
+    </div>
   )
 }
 
