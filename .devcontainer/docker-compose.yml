@@ -6,6 +6,8 @@ services:
     command: sleep infinity
     depends_on:
       - db
+    environment:
+      - DATABASE_URL=postgresql://lumina:lumina@db:5432/luminadb
 
   db:
     image: postgres:16-alpine
