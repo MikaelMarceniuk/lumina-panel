@@ -14,7 +14,7 @@ import {
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
 import { menuItems } from '@/constants/menu-itens.contants'
-import { useLocation } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 
 export const NavMain = () => {
   const location = useLocation()
@@ -83,10 +83,10 @@ export const NavMain = () => {
                   isActive && 'bg-primary text-primary-foreground'
                 }`}
               >
-                <a href={item.url}>
+                <Link to={item.url}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           )

@@ -24,17 +24,17 @@ export const menuItems: MenuItem[] = [
   },
   {
     title: 'Clientes',
-    url: '/dashboard/clients',
+    url: '/dashboard/client',
     icon: Users,
   },
   {
     title: 'Pedidos',
-    url: '/dashboard/orders',
+    url: '/dashboard/order',
     icon: ClipboardList,
   },
   {
     title: 'Produtos',
-    url: '/dashboard/products',
+    url: '/dashboard/product',
     icon: Package,
   },
 ]
