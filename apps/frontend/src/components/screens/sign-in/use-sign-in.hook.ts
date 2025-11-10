@@ -6,6 +6,7 @@ import { api } from '@/lib/axios'
 import { toast } from 'sonner'
 import { AxiosError } from 'axios'
 import { useNavigate } from 'react-router'
+import { useAuth } from '@/providers/auth.provider'
 
 const SignInSchema = z.object({
   email: z.email('O e-mail é obrigatório').trim().min(5, 'E-mail muito curto'),
@@ -18,12 +19,14 @@ type SignInSchema = z.infer<typeof SignInSchema>
 
 export const useSignIn = () => {
   const navigate = useNavigate()
+  const { refetchUser } = useAuth()
 
   const { mutateAsync } = useMutation({
     mutationFn: async (data: SignInSchema) => await api.post('/auth', data),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Logado com sucesso!')
       navigate('/dashboard')
+      await refetchUser()
     },
     onError: (err) => {
       if (err instanceof AxiosError) {
