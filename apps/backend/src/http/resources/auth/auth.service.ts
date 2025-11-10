@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SignInPresenter } from './presenters/sign-in.presenter';
 import { UserPresenter } from '../user/presenters/user.presenter';
 import { SessionService } from 'src/providers/session/session.service';
+import { RefreshPresenter } from './presenters/refresh.presenter';
 
 @Injectable()
 export class AuthService {
@@ -56,5 +57,30 @@ export class AuthService {
       accessToken,
       refreshToken,
     });
+  }
+
+  async refreshToken(refreshToken: string) {
+    const session = await this.prisma.session.findFirst({
+      where: { refreshToken, isActive: true },
+      include: { user: true },
+    });
+
+    if (!session) throw new UnauthorizedException('Refresh token inválido');
+
+    if (session.expiresAt && session.expiresAt < new Date()) {
+      throw new UnauthorizedException('Refresh token expirado');
+    }
+
+    const accessToken = this.jwtService.sign(
+      { sub: session.user.id },
+      { secret: process.env.JWT_SECRET, expiresIn: '15m' },
+    );
+
+    await this.prisma.session.update({
+      data: { accessToken },
+      where: { id: session.id },
+    });
+
+    return new RefreshPresenter({ accessToken });
   }
 }

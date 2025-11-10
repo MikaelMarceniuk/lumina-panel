@@ -1,7 +1,16 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDTO } from './dto/sign-in.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+
+const fifteenMin = 15 * 60 * 1000;
 
 @Controller('auth')
 export class AuthController {
@@ -18,7 +27,7 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 15 * 60 * 1000, // 15 minutos
+      maxAge: fifteenMin, // 15 minutos
     });
 
     res.cookie('refreshToken', refreshToken, {
@@ -26,6 +35,24 @@ export class AuthController {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
+    });
+  }
+
+  @Post('refresh')
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { refreshToken } = req.cookies as { refreshToken?: string };
+    if (!refreshToken) throw new UnauthorizedException('Refresh token ausente');
+
+    const { accessToken } = await this.authService.refreshToken(refreshToken);
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: fifteenMin, // 15 minutos
     });
   }
 }
