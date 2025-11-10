@@ -5,12 +5,14 @@ import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { SignInPresenter } from './presenters/sign-in.presenter';
 import { UserPresenter } from '../user/presenters/user.presenter';
+import { SessionService } from 'src/providers/session/session.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private sessionService: SessionService,
   ) {}
 
   async signIn({ email, password }: SignInDTO) {
@@ -38,6 +40,16 @@ export class AuthService {
       { sub: user.id },
       { expiresIn: '7d' },
     );
+
+    const refreshTokenExpiresAt = new Date();
+    refreshTokenExpiresAt.setDate(refreshTokenExpiresAt.getDate() + 7);
+
+    await this.sessionService.createSession({
+      accessToken,
+      refreshToken,
+      expiresAt: refreshTokenExpiresAt,
+      userId: user.id,
+    });
 
     return new SignInPresenter({
       user: new UserPresenter(user),
