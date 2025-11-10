@@ -55,4 +55,28 @@ export class AuthController {
       maxAge: fifteenMin, // 15 minutos
     });
   }
+
+  @Post('sign-out')
+  async signOut(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { refreshToken } = req.cookies as { refreshToken?: string };
+
+    if (refreshToken) {
+      await this.authService.signOut(refreshToken);
+    }
+
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+  }
 }

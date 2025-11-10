@@ -83,4 +83,10 @@ export class AuthService {
 
     return new RefreshPresenter({ accessToken });
   }
+
+  async signOut(refreshToken: string) {
+    await this.prisma.session.deleteMany({
+      where: { refreshToken },
+    });
+  }
 }
