@@ -31,4 +31,15 @@ export class SessionService {
       return session;
     });
   }
+
+  async desactivateSession(id: string) {
+    await this.prisma.session.update({
+      where: {
+        id,
+      },
+      data: {
+        isActive: false,
+      },
+    });
+  }
 }

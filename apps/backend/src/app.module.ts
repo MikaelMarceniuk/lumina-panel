@@ -7,6 +7,7 @@ import { PrismaModule } from './providers/prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { envSchema } from './config/env.config';
 import { UserModule } from './http/resources/user/user.module';
+import { SessionModule } from './providers/session/session.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { UserModule } from './http/resources/user/user.module';
       }),
     }),
     PrismaModule,
+    SessionModule,
     AuthModule,
     UserModule,
   ],
