@@ -8,22 +8,25 @@ import { AuthProvider } from './providers/auth.provider'
 import { ClientScreen } from './components/screens/client.screen'
 import { OrderScreen } from './components/screens/order.screen'
 import { ProductScreen } from './components/screens/product.screen'
+import { ThemeProvider } from './providers/theme.provider'
 
 const App = () => {
   return (
     <BrowserRouter>
       <QueryClientProvider>
         <AuthProvider>
-          <Routes>
-            <Route path="/sign-in" element={<SignInScreen />} />
-            <Route element={<AppLayout />}>
-              <Route path="/dashboard" element={<DashboardScreen />} />
-              <Route path="/dashboard/client" element={<ClientScreen />} />
-              <Route path="/dashboard/order" element={<OrderScreen />} />
-              <Route path="/dashboard/product" element={<ProductScreen />} />
-            </Route>
-          </Routes>
-          <Toaster richColors />
+          <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+            <Routes>
+              <Route path="/sign-in" element={<SignInScreen />} />
+              <Route element={<AppLayout />}>
+                <Route path="/dashboard" element={<DashboardScreen />} />
+                <Route path="/dashboard/client" element={<ClientScreen />} />
+                <Route path="/dashboard/order" element={<OrderScreen />} />
+                <Route path="/dashboard/product" element={<ProductScreen />} />
+              </Route>
+            </Routes>
+            <Toaster richColors />
+          </ThemeProvider>
         </AuthProvider>
       </QueryClientProvider>
     </BrowserRouter>

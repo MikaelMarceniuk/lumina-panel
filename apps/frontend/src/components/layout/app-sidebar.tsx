@@ -9,9 +9,9 @@ import {
 } from '@/components/ui/sidebar'
 import { NavMain } from './nav-main'
 import { NavUser } from './nav-user'
-import { menuItems } from '@/constants/menu-itens.contants'
 import { Lightbulb } from 'lucide-react'
 import { Link } from 'react-router'
+import { ThemeToggle } from '../theme-toggle'
 
 export const AppSidebar = ({
   ...props
@@ -33,6 +33,7 @@ export const AppSidebar = ({
       </SidebarHeader>
       <SidebarContent>
         <NavMain />
+        <ThemeToggle />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
