@@ -33,3 +33,23 @@ model Session {
   @@index([userId])
   @@index([refreshToken])
 }
+
+model Customer {
+  id          String  @id @default(cuid())
+  name        String
+  email       String  @unique
+  phone       String?
+  document    String? @unique
+  companyName String? @map("company_name")
+
+  address    String?
+  complement String?
+  city       String?
+  state      String?
+  zipCode    String? @map("zip_code")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("customers")
+}

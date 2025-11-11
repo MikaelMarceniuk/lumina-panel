@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { envSchema } from './config/env.config';
 import { UserModule } from './http/resources/user/user.module';
 import { SessionModule } from './providers/session/session.module';
+import { CustomerModule } from './http/resources/customer/customer.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { SessionModule } from './providers/session/session.module';
     SessionModule,
     AuthModule,
     UserModule,
+    CustomerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
