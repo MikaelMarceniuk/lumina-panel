@@ -36,7 +36,9 @@ export const AppLayout = () => {
             </Breadcrumb>
           </div>
         </header>
-        <Outlet />
+        <div className="p-4">
+          <Outlet />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

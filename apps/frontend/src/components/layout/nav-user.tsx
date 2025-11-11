@@ -24,13 +24,14 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { useAuth } from '@/providers/auth.provider'
+import { NavUserSkeleton } from './nav-user.skeleton'
 
 export const NavUser = () => {
   const { isMobile } = useSidebar()
   const { user, signOut } = useAuth()
 
   if (!user) {
-    return null
+    return <NavUserSkeleton />
   }
 
   return (
