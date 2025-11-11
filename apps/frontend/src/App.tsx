@@ -5,7 +5,7 @@ import { QueryClientProvider } from './providers/query-client.provider'
 import { Toaster } from './components/ui/sonner'
 import { AppLayout } from './components/layout/app-layout'
 import { AuthProvider } from './providers/auth.provider'
-import { ClientScreen } from './components/screens/client.screen'
+import { CustomerScreen } from './components/screens/customer/customer.screen'
 import { OrderScreen } from './components/screens/order.screen'
 import { ProductScreen } from './components/screens/product.screen'
 import { ThemeProvider } from './providers/theme.provider'
@@ -20,7 +20,10 @@ const App = () => {
               <Route path="/sign-in" element={<SignInScreen />} />
               <Route element={<AppLayout />}>
                 <Route path="/dashboard" element={<DashboardScreen />} />
-                <Route path="/dashboard/client" element={<ClientScreen />} />
+                <Route
+                  path="/dashboard/customer"
+                  element={<CustomerScreen />}
+                />
                 <Route path="/dashboard/order" element={<OrderScreen />} />
                 <Route path="/dashboard/product" element={<ProductScreen />} />
               </Route>

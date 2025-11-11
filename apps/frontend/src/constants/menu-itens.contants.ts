@@ -24,7 +24,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     title: 'Clientes',
-    url: '/dashboard/client',
+    url: '/dashboard/customer',
     icon: Users,
   },
   {
