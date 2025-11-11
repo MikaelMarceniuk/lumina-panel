@@ -7,6 +7,11 @@ import { CustomerPresenter } from './presenter/customer.presenter';
 export class CustomerService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getMany() {
+    const customers = await this.prisma.customer.findMany({});
+    return customers.map((c) => new CustomerPresenter(c));
+  }
+
   async create(dto: CreateCustomerDTO) {
     const email = dto.email.toLowerCase().trim();
     const document = dto.document?.replace(/\D/g, '');
