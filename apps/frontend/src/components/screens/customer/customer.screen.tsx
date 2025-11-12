@@ -10,8 +10,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '@/lib/axios'
-import type { Customer } from '@/types/customer.type'
 import {
   formatCNPJ,
   formatCPF,
@@ -29,27 +27,40 @@ import {
 import { useState } from 'react'
 import z from 'zod'
 import { useDebounce } from '@/hooks/use-debounce.hook'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
+import { getCustomerAction } from '@/actions/get-customers.action'
 
 const filtersSchema = z.object({
   q: z.string(),
   company: z.string(),
+  page: z.number(),
+  limit: z.number(),
 })
 
 type filtersSchema = z.infer<typeof filtersSchema>
 
-const initialFiltersValue = { q: '', company: 'all' }
+const initialFiltersValue = { q: '', company: 'all', page: 1, limit: 10 }
 
 export const CustomerScreen = () => {
   const [filters, setFilters] = useState<filtersSchema>(initialFiltersValue)
   const debouncedFilters = useDebounce(filters, 600)
 
   const { data } = useQuery({
-    queryKey: ['/customer'],
-    queryFn: async () => {
-      const customer = (await api.get<Customer[]>('/customer')).data
-      return customer.splice(0, 10)
-    },
+    queryKey: ['/customer', debouncedFilters],
+    queryFn: async () => await getCustomerAction({ ...debouncedFilters }),
   })
+
+  const handlePageChange = (page: number) => {
+    if (page < 1 || (data && page > data.meta.totalPages)) return
+    setFilters((old) => ({ ...old, page }))
+  }
 
   const handleChange = (key: keyof filtersSchema, value: string) =>
     setFilters((old) => ({ ...old, [key]: value }))
@@ -102,7 +113,7 @@ export const CustomerScreen = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.map((c) => (
+          {data?.customers.map((c) => (
             <TableRow key={c.id}>
               <TableCell>{c.name}</TableCell>
               <TableCell>{c.email}</TableCell>
@@ -122,6 +133,38 @@ export const CustomerScreen = () => {
           ))}
         </TableBody>
       </Table>
+
+      {data && data.meta.totalPages > 1 && (
+        <Pagination className="justify-end">
+          <PaginationContent>
+            <PaginationItem
+              className="cursor-pointer"
+              onClick={() => handlePageChange(filters.page - 1)}
+            >
+              <PaginationPrevious />
+            </PaginationItem>
+
+            {Array.from({ length: data.meta.totalPages }).map((_, i) => (
+              <PaginationItem
+                key={i}
+                className={`cursor-pointer ${filters.page === i + 1 ? 'font-bold' : ''}`}
+                onClick={() => handlePageChange(i + 1)}
+              >
+                <PaginationLink isActive={filters.page === i + 1}>
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
+            <PaginationItem
+              className="cursor-pointer"
+              onClick={() => handlePageChange(filters.page + 1)}
+            >
+              <PaginationNext />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </main>
   )
 }

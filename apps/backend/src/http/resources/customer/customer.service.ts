@@ -3,33 +3,48 @@ import { PrismaService } from 'src/providers/prisma/prisma.service';
 import { CreateCustomerDTO } from './dto/create-customer.dto';
 import { CustomerPresenter } from './presenter/customer.presenter';
 import { GetManyQuery } from './query/get-many.query';
+import { Prisma } from 'generated/prisma/browser';
+import { CustomerPaginated } from './presenter/customer-paginated.presenter';
 
 @Injectable()
 export class CustomerService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getMany(filters: GetManyQuery) {
-    const { q, company } = filters;
+    const { q, company, limit = 10, page = 1 } = filters;
 
-    const customers = await this.prisma.customer.findMany({
-      where: {
-        AND: [
-          company && company !== 'all'
-            ? { companyName: { contains: company, mode: 'insensitive' } }
-            : {},
-          q
-            ? {
-                OR: [
-                  { email: { contains: q, mode: 'insensitive' } },
-                  { name: { contains: q, mode: 'insensitive' } },
-                ],
-              }
-            : {},
-        ],
-      },
+    const where: Prisma.CustomerWhereInput = {
+      AND: [
+        company && company !== 'all'
+          ? { companyName: { contains: company, mode: 'insensitive' } }
+          : {},
+        q
+          ? {
+              OR: [
+                { email: { contains: q, mode: 'insensitive' } },
+                { name: { contains: q, mode: 'insensitive' } },
+              ],
+            }
+          : {},
+      ],
+    };
+
+    const [customers, totalCount] = await Promise.all([
+      this.prisma.customer.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.customer.count({ where }),
+    ]);
+
+    return new CustomerPaginated({
+      customers,
+      limit,
+      page,
+      totalCount,
     });
-
-    return customers.map((c) => new CustomerPresenter(c));
   }
 
   async create(dto: CreateCustomerDTO) {
