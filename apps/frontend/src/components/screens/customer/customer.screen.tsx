@@ -1,14 +1,6 @@
 import { Ellipsis, Plus } from 'lucide-react'
 import { Button } from '../../ui/button'
 import { CreateCustomerDialog } from './create-customer.dialog'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
 import { useQuery } from '@tanstack/react-query'
 import {
   formatCNPJ,
@@ -27,29 +19,23 @@ import {
 import { useState } from 'react'
 import z from 'zod'
 import { useDebounce } from '@/hooks/use-debounce.hook'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination'
 import { getCustomerAction } from '@/actions/get-customers.action'
 import { AppTable } from '@/components/table/app-table'
 import type { ColumnDef } from '@/types/column-def.type'
 import type { Customer } from '@/types/customer.type'
+import { AppPagination } from '@/components/table/app-table-pagination'
+import { usePagination } from '@/hooks/use-pagination.hook'
 
 const filtersSchema = z.object({
   q: z.string(),
   company: z.string(),
-  page: z.number(),
-  limit: z.number(),
 })
+type FiltersSchema = z.infer<typeof filtersSchema>
 
-type filtersSchema = z.infer<typeof filtersSchema>
-
-const initialFiltersValue = { q: '', company: 'all', page: 1, limit: 10 }
+const initialFiltersValue: FiltersSchema = {
+  q: '',
+  company: 'all',
+}
 
 const columns: ColumnDef<Customer>[] = [
   { title: 'Name', key: 'name' },
@@ -70,21 +56,20 @@ const columns: ColumnDef<Customer>[] = [
 ]
 
 export const CustomerScreen = () => {
-  const [filters, setFilters] = useState<filtersSchema>(initialFiltersValue)
+  const [filters, setFilters] = useState<FiltersSchema>(initialFiltersValue)
+  const { page, limit, handlePageChange, resetPagination } = usePagination()
   const debouncedFilters = useDebounce(filters, 600)
 
   const { data, isFetching } = useQuery({
-    queryKey: ['/customer', debouncedFilters],
-    queryFn: async () => await getCustomerAction({ ...debouncedFilters }),
+    queryKey: ['/customer', debouncedFilters, page, limit],
+    queryFn: async () =>
+      await getCustomerAction({ ...debouncedFilters, page, limit }),
   })
 
-  const handlePageChange = (page: number) => {
-    if (page < 1 || (data && page > data.meta.totalPages)) return
-    setFilters((old) => ({ ...old, page }))
-  }
-
-  const handleChange = (key: keyof filtersSchema, value: string) =>
+  const handleChange = (key: keyof FiltersSchema, value: string) => {
     setFilters((old) => ({ ...old, [key]: value }))
+    resetPagination()
+  }
 
   return (
     <main className="space-y-4 px-4 py-2">
@@ -117,7 +102,13 @@ export const CustomerScreen = () => {
             <SelectItem value="lumine">Lumine</SelectItem>
           </SelectContent>
         </Select>
-        <Button variant="ghost" onClick={() => setFilters(initialFiltersValue)}>
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setFilters(initialFiltersValue)
+            resetPagination()
+          }}
+        >
           Limpar
         </Button>
       </div>
@@ -127,38 +118,12 @@ export const CustomerScreen = () => {
         data={data?.customers || []}
         isLoading={isFetching}
       />
-
-      {data && data.meta.totalPages > 1 && (
-        <Pagination className="justify-end">
-          <PaginationContent>
-            <PaginationItem
-              className="cursor-pointer"
-              onClick={() => handlePageChange(filters.page - 1)}
-            >
-              <PaginationPrevious />
-            </PaginationItem>
-
-            {Array.from({ length: data.meta.totalPages }).map((_, i) => (
-              <PaginationItem
-                key={i}
-                className={`cursor-pointer ${filters.page === i + 1 ? 'font-bold' : ''}`}
-                onClick={() => handlePageChange(i + 1)}
-              >
-                <PaginationLink isActive={filters.page === i + 1}>
-                  {i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-
-            <PaginationItem
-              className="cursor-pointer"
-              onClick={() => handlePageChange(filters.page + 1)}
-            >
-              <PaginationNext />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      )}
+      <AppPagination
+        totalPages={data?.meta.totalPages || 0}
+        currentPage={page}
+        onChangePage={handlePageChange}
+        className="justify-end"
+      />
     </main>
   )
 }
