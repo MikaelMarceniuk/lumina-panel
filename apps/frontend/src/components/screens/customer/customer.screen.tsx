@@ -36,6 +36,9 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination'
 import { getCustomerAction } from '@/actions/get-customers.action'
+import { AppTable } from '@/components/table/app-table'
+import type { ColumnDef } from '@/types/column-def.type'
+import type { Customer } from '@/types/customer.type'
 
 const filtersSchema = z.object({
   q: z.string(),
@@ -48,11 +51,29 @@ type filtersSchema = z.infer<typeof filtersSchema>
 
 const initialFiltersValue = { q: '', company: 'all', page: 1, limit: 10 }
 
+const columns: ColumnDef<Customer>[] = [
+  { title: 'Name', key: 'name' },
+  { title: 'Email', key: 'email' },
+  {
+    title: 'Telefone',
+    key: 'phone',
+    render: (val) => (val ? formatPhone(val) : '-----'),
+  },
+  {
+    title: 'Documento',
+    key: 'document',
+    render: (val) =>
+      val ? (isValidCNPJ(val) ? formatCNPJ(val) : formatCPF(val)) : '-----',
+  },
+  { title: 'Empresa', key: 'companyName' },
+  { title: '', key: 'id', render: () => <Ellipsis /> },
+]
+
 export const CustomerScreen = () => {
   const [filters, setFilters] = useState<filtersSchema>(initialFiltersValue)
   const debouncedFilters = useDebounce(filters, 600)
 
-  const { data } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ['/customer', debouncedFilters],
     queryFn: async () => await getCustomerAction({ ...debouncedFilters }),
   })
@@ -101,38 +122,11 @@ export const CustomerScreen = () => {
         </Button>
       </div>
 
-      <Table className="max-h-[70vh]">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nome</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Telefone</TableHead>
-            <TableHead>Documento</TableHead>
-            <TableHead>Empresa</TableHead>
-            <TableHead />
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data?.customers.map((c) => (
-            <TableRow key={c.id}>
-              <TableCell>{c.name}</TableCell>
-              <TableCell>{c.email}</TableCell>
-              <TableCell>{c.phone ? formatPhone(c.phone) : '-----'}</TableCell>
-              <TableCell>
-                {c.document
-                  ? isValidCNPJ(c.document)
-                    ? formatCNPJ(c.document)
-                    : formatCPF(c.document)
-                  : '-----'}
-              </TableCell>
-              <TableCell>{c.companyName}</TableCell>
-              <TableCell>
-                <Ellipsis />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <AppTable
+        columns={columns}
+        data={data?.customers || []}
+        isLoading={isFetching}
+      />
 
       {data && data.meta.totalPages > 1 && (
         <Pagination className="justify-end">
