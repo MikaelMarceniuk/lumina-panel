@@ -1,4 +1,4 @@
-import { Ellipsis, Plus } from 'lucide-react'
+import { Ellipsis, Eye, Plus } from 'lucide-react'
 import { Button } from '../../ui/button'
 import { CreateCustomerDialog } from './create-customer.dialog'
 import { useQuery } from '@tanstack/react-query'
@@ -25,7 +25,15 @@ import type { ColumnDef } from '@/types/column-def.type'
 import type { Customer } from '@/types/customer.type'
 import { AppPagination } from '@/components/table/app-table-pagination'
 import { usePagination } from '@/hooks/use-pagination.hook'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { useNavigate } from 'react-router'
 
+// TODO Improve filter logic
 const filtersSchema = z.object({
   q: z.string(),
   company: z.string(),
@@ -37,29 +45,51 @@ const initialFiltersValue: FiltersSchema = {
   company: 'all',
 }
 
-const columns: ColumnDef<Customer>[] = [
-  { title: 'Name', key: 'name' },
-  { title: 'Email', key: 'email' },
-  {
-    title: 'Telefone',
-    key: 'phone',
-    render: (val) => (val ? formatPhone(val) : '-----'),
-  },
-  {
-    title: 'Documento',
-    key: 'document',
-    render: (val) =>
-      val ? (isValidCNPJ(val) ? formatCNPJ(val) : formatCPF(val)) : '-----',
-  },
-  { title: 'Empresa', key: 'companyName' },
-  { title: '', key: 'id', render: () => <Ellipsis /> },
-]
-
 export const CustomerScreen = () => {
+  const navigate = useNavigate()
   const [filters, setFilters] = useState<FiltersSchema>(initialFiltersValue)
   const { page, limit, handlePageChange, resetPagination } = usePagination()
   const debouncedFilters = useDebounce(filters, 600)
 
+  const columns: ColumnDef<Customer>[] = [
+    { title: 'Name', key: 'name' },
+    { title: 'Email', key: 'email' },
+    {
+      title: 'Telefone',
+      key: 'phone',
+      render: (val) => (val ? formatPhone(val) : '-----'),
+    },
+    {
+      title: 'Documento',
+      key: 'document',
+      render: (val) =>
+        val ? (isValidCNPJ(val) ? formatCNPJ(val) : formatCPF(val)) : '-----',
+    },
+    { title: 'Empresa', key: 'companyName' },
+    {
+      title: '',
+      key: 'id',
+      render: (val) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="cursor-pointer">
+              <Ellipsis />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onSelect={() => navigate(`/dashboard/customer/${val}`)}
+            >
+              <Eye />
+              Visualizar
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ]
+
+  // TODO Improve error handling
   const { data, isFetching } = useQuery({
     queryKey: ['/customer', debouncedFilters, page, limit],
     queryFn: async () =>

@@ -1,10 +1,15 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/providers/prisma/prisma.service';
 import { CreateCustomerDTO } from './dto/create-customer.dto';
 import { CustomerPresenter } from './presenter/customer.presenter';
 import { GetManyQuery } from './query/get-many.query';
 import { Prisma } from 'generated/prisma/browser';
 import { CustomerPaginated } from './presenter/customer-paginated.presenter';
+import { CustomerDetailsPresenter } from './presenter/customer-details.presenter';
 
 @Injectable()
 export class CustomerService {
@@ -45,6 +50,20 @@ export class CustomerService {
       page,
       totalCount,
     });
+  }
+
+  async getOne(id: string) {
+    const customer = await this.prisma.customer.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!customer) {
+      throw new NotFoundException('Cliente não foi encontrado.');
+    }
+
+    return new CustomerDetailsPresenter(customer);
   }
 
   async create(dto: CreateCustomerDTO) {
