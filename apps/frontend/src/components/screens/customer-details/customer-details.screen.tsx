@@ -5,6 +5,9 @@ import { useState } from 'react'
 import { ContactTab } from './tabs/contact.tab'
 import { AddressTab } from './tabs/address.tab'
 import { MetadataTab } from './tabs/metadata.tab'
+import { CustomerDetailsProvider } from './customer-details.provider'
+import { useNavigate, useParams } from 'react-router'
+import { toast } from 'sonner'
 
 const AvailableTabs = {
   basicInformations: {
@@ -30,31 +33,41 @@ const AvailableTabs = {
 }
 
 export function CustomerDetailsScreen() {
+  const navigate = useNavigate()
+  const { id } = useParams<{ id: string }>()
+
+  if (!id) {
+    toast.error('Cliente não foi encontrado.')
+    return navigate('/dashboard/customer', { replace: true })
+  }
+
   const [currentTab, setCurrentTab] =
     useState<keyof typeof AvailableTabs>('basicInformations')
 
   return (
-    <div className="grid h-full min-h-screen grid-cols-[250px_1fr] gap-6">
-      <div className="flex flex-col space-y-1 pr-4">
-        {Object.entries(AvailableTabs).map(([key, { title, icon: Icon }]) => (
-          <Button
-            key={key}
-            variant="ghost"
-            className="w-full cursor-pointer justify-between"
-            onClick={() => setCurrentTab(key as keyof typeof AvailableTabs)}
-          >
-            <span className="flex items-center gap-2">
-              <Icon className="h-4 w-4" />
-              {title}
-            </span>
-            <ChevronRight className="h-4 w-4 opacity-50" />
-          </Button>
-        ))}
-      </div>
+    <CustomerDetailsProvider id={id}>
+      <div className="grid h-full min-h-screen grid-cols-[250px_1fr] gap-6">
+        <div className="flex flex-col space-y-1 pr-4">
+          {Object.entries(AvailableTabs).map(([key, { title, icon: Icon }]) => (
+            <Button
+              key={key}
+              variant="ghost"
+              className="w-full cursor-pointer justify-between"
+              onClick={() => setCurrentTab(key as keyof typeof AvailableTabs)}
+            >
+              <span className="flex items-center gap-2">
+                <Icon className="h-4 w-4" />
+                {title}
+              </span>
+              <ChevronRight className="h-4 w-4 opacity-50" />
+            </Button>
+          ))}
+        </div>
 
-      <div className="flex h-full w-full flex-col p-4">
-        <div className="flex-1">{AvailableTabs[currentTab].tab}</div>
+        <div className="flex h-full w-full flex-col p-4">
+          <div className="flex-1">{AvailableTabs[currentTab].tab}</div>
+        </div>
       </div>
-    </div>
+    </CustomerDetailsProvider>
   )
 }
