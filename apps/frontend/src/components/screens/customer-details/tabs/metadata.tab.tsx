@@ -1,6 +1,6 @@
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useCustomerDetails } from '../customer-details.provider'
+import { useCustomerDetails } from '../providers/customer-details.provider'
 import { formatDateToBrazil } from '@/lib/date-formatter.utils'
 
 export const MetadataTab = () => {

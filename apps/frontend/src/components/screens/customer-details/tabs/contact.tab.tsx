@@ -6,7 +6,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { useCustomerDetails } from '../customer-details.provider'
+import { useCustomerDetails } from '../providers/customer-details.provider'
 import { Input } from '@/components/ui/input'
 
 export const ContactTab = () => {

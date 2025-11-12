@@ -3,13 +3,18 @@ import { customerSchema, type CustomerSchema } from '@/schemas/customer.schema'
 import type { CustomerDetails } from '@/types/customer-details.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
-import React, { createContext, useContext, useEffect } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useForm, type UseFormReturn } from 'react-hook-form'
+import type { CustomerDetailsTabs } from '../constants/customer-details-tabs.constant'
 
 type CustomerDetailsContext = {
   customer: CustomerDetails | undefined
   isFetching: boolean
   form: UseFormReturn<CustomerSchema>
+  isEditing: boolean
+  toggleEditing: () => void
+  currentTab: keyof typeof CustomerDetailsTabs
+  changeCurrentTab: (tab: keyof typeof CustomerDetailsTabs) => void
 }
 
 const CustomerDetailsContext = createContext<CustomerDetailsContext>(
@@ -24,6 +29,10 @@ type CustomerDetailsProviderProps = {
 export const CustomerDetailsProvider: React.FC<
   CustomerDetailsProviderProps
 > = ({ children, id }) => {
+  const [isEditing, setIsEditing] = useState<boolean>(false)
+  const [currentTab, setCurrentTab] =
+    useState<keyof typeof CustomerDetailsTabs>('basicInformations')
+
   const form = useForm<CustomerSchema>({
     resolver: zodResolver(customerSchema),
     defaultValues: {
@@ -46,6 +55,11 @@ export const CustomerDetailsProvider: React.FC<
     enabled: !!id,
   })
 
+  const toggleEditing = () => setIsEditing(!isEditing)
+
+  const changeCurrentTab = (tab: keyof typeof CustomerDetailsTabs) =>
+    setCurrentTab(tab)
+
   useEffect(() => {
     if (data) {
       form.setValue('name', data.name)
@@ -66,6 +80,10 @@ export const CustomerDetailsProvider: React.FC<
         customer: data,
         isFetching,
         form,
+        isEditing,
+        toggleEditing,
+        currentTab,
+        changeCurrentTab,
       }}
     >
       {children}

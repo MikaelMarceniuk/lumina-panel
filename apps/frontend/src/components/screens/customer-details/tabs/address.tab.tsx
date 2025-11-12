@@ -1,4 +1,4 @@
-import { useCustomerDetails } from '../customer-details.provider'
+import { useCustomerDetails } from '../providers/customer-details.provider'
 import {
   Form,
   FormControl,
