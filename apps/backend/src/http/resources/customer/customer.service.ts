@@ -2,13 +2,33 @@ import { Injectable, ConflictException } from '@nestjs/common';
 import { PrismaService } from 'src/providers/prisma/prisma.service';
 import { CreateCustomerDTO } from './dto/create-customer.dto';
 import { CustomerPresenter } from './presenter/customer.presenter';
+import { GetManyQuery } from './query/get-many.query';
 
 @Injectable()
 export class CustomerService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getMany() {
-    const customers = await this.prisma.customer.findMany({});
+  async getMany(filters: GetManyQuery) {
+    const { q, company } = filters;
+
+    const customers = await this.prisma.customer.findMany({
+      where: {
+        AND: [
+          company && company !== 'all'
+            ? { companyName: { contains: company, mode: 'insensitive' } }
+            : {},
+          q
+            ? {
+                OR: [
+                  { email: { contains: q, mode: 'insensitive' } },
+                  { name: { contains: q, mode: 'insensitive' } },
+                ],
+              }
+            : {},
+        ],
+      },
+    });
+
     return customers.map((c) => new CustomerPresenter(c));
   }
 

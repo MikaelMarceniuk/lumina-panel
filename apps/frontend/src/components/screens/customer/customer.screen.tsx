@@ -18,8 +18,31 @@ import {
   formatPhone,
   isValidCNPJ,
 } from '@/lib/formatters.utils'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useState } from 'react'
+import z from 'zod'
+import { useDebounce } from '@/hooks/use-debounce.hook'
+
+const filtersSchema = z.object({
+  q: z.string(),
+  company: z.string(),
+})
+
+type filtersSchema = z.infer<typeof filtersSchema>
+
+const initialFiltersValue = { q: '', company: 'all' }
 
 export const CustomerScreen = () => {
+  const [filters, setFilters] = useState<filtersSchema>(initialFiltersValue)
+  const debouncedFilters = useDebounce(filters, 600)
+
   const { data } = useQuery({
     queryKey: ['/customer'],
     queryFn: async () => {
@@ -27,6 +50,9 @@ export const CustomerScreen = () => {
       return customer.splice(0, 10)
     },
   })
+
+  const handleChange = (key: keyof filtersSchema, value: string) =>
+    setFilters((old) => ({ ...old, [key]: value }))
 
   return (
     <main className="space-y-4 px-4 py-2">
@@ -40,7 +66,31 @@ export const CustomerScreen = () => {
         </CreateCustomerDialog>
       </div>
 
-      <Table className="h-[70vh]">
+      <div className="flex gap-4">
+        <Input
+          className="max-w-72"
+          placeholder="Buscar..."
+          value={filters.q}
+          onChange={(e) => handleChange('q', e.target.value)}
+        />
+        <Select
+          value={filters.company}
+          onValueChange={(v) => handleChange('company', v)}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas as empresas</SelectItem>
+            <SelectItem value="lumine">Lumine</SelectItem>
+          </SelectContent>
+        </Select>
+        <Button variant="ghost" onClick={() => setFilters(initialFiltersValue)}>
+          Limpar
+        </Button>
+      </div>
+
+      <Table className="max-h-[70vh]">
         <TableHeader>
           <TableRow>
             <TableHead>Nome</TableHead>
