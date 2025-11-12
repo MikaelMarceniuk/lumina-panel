@@ -9,7 +9,7 @@ import { CustomerScreen } from './components/screens/customer/customer.screen'
 import { OrderScreen } from './components/screens/order.screen'
 import { ProductScreen } from './components/screens/product.screen'
 import { ThemeProvider } from './providers/theme.provider'
-import { CustomerDetailScreen } from './components/screens/customer/customer-detail.screen'
+import { CustomerDetailsScreen } from './components/screens/customer-details/customer-details.screen'
 
 const App = () => {
   return (
@@ -27,7 +27,7 @@ const App = () => {
                 />
                 <Route
                   path="/dashboard/customer/:id"
-                  element={<CustomerDetailScreen />}
+                  element={<CustomerDetailsScreen />}
                 />
                 <Route path="/dashboard/order" element={<OrderScreen />} />
                 <Route path="/dashboard/product" element={<ProductScreen />} />
