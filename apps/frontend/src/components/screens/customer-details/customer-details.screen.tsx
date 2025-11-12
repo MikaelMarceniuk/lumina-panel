@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { ChevronRight, User, Mail, MapPin, Clock } from 'lucide-react'
-import { BasicInformationsTab } from './basic-informations.tab'
+import { BasicInformationsTab } from './tabs/basic-informations.tab'
 import { useState } from 'react'
-import { ContactTab } from './contact.tab'
-import { AddressTab } from './address.tab'
-import { MetadataTab } from './metadata.tab'
+import { ContactTab } from './tabs/contact.tab'
+import { AddressTab } from './tabs/address.tab'
+import { MetadataTab } from './tabs/metadata.tab'
 
 const AvailableTabs = {
   basicInformations: {
