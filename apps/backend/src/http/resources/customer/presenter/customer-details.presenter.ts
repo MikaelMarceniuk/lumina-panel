@@ -12,6 +12,8 @@ export class CustomerDetailsPresenter {
   city: string | null;
   address: string | null;
   complement: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 
   constructor({
     id,
@@ -25,6 +27,8 @@ export class CustomerDetailsPresenter {
     city,
     address,
     complement,
+    createdAt,
+    updatedAt,
   }: Customer) {
     this.id = id;
     this.name = name;
@@ -37,5 +41,7 @@ export class CustomerDetailsPresenter {
     this.city = city;
     this.address = address;
     this.complement = complement;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 }

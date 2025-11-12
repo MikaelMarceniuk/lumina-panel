@@ -1,3 +1,6 @@
 import type { Customer } from './customer.type'
 
-export type CustomerDetails = {} & Customer
+export type CustomerDetails = {
+  createdAt: string
+  updatedAt: string
+} & Customer

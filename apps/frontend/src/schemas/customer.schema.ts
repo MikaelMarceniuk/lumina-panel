@@ -41,4 +41,4 @@ export const customerSchema = z.object({
     .optional(),
 })
 
-export type CustomerSchema = z.infer<typeof CustomerSchema>
+export type CustomerSchema = z.infer<typeof customerSchema>

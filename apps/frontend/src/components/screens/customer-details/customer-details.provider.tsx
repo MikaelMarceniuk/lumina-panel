@@ -4,11 +4,12 @@ import type { CustomerDetails } from '@/types/customer-details.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import React, { createContext, useContext, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, type UseFormReturn } from 'react-hook-form'
 
 type CustomerDetailsContext = {
   customer: CustomerDetails | undefined
   isFetching: boolean
+  form: UseFormReturn<CustomerSchema>
 }
 
 const CustomerDetailsContext = createContext<CustomerDetailsContext>(
@@ -49,13 +50,13 @@ export const CustomerDetailsProvider: React.FC<
     if (data) {
       form.setValue('name', data.name)
       form.setValue('email', data.email)
-      form.setValue('phone', data.phone)
-      form.setValue('document', data.document)
-      form.setValue('companyName', data.companyName)
-      form.setValue('address', data.address)
-      form.setValue('city', data.city)
-      form.setValue('state', data.state)
-      form.setValue('zipCode', data.zipCode)
+      form.setValue('phone', data.phone || undefined)
+      form.setValue('document', data.document || undefined)
+      form.setValue('companyName', data.companyName || undefined)
+      form.setValue('address', data.address || undefined)
+      form.setValue('city', data.city || undefined)
+      form.setValue('state', data.state || undefined)
+      form.setValue('zipCode', data.zipCode || undefined)
     }
   }, [data])
 
@@ -64,6 +65,7 @@ export const CustomerDetailsProvider: React.FC<
       value={{
         customer: data,
         isFetching,
+        form,
       }}
     >
       {children}
@@ -73,12 +75,10 @@ export const CustomerDetailsProvider: React.FC<
 
 export const useCustomerDetails = () => {
   const ctx = useContext(CustomerDetailsContext)
-
   if (!ctx) {
     throw new Error(
-      'useCustomerDetails hook must be used inside CustomerDetailsProvider'
+      'useCustomerDetails must be used within CustomerDetailsProvider'
     )
   }
-
   return ctx
 }
