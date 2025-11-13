@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { TrimAndEmptyToUndefined } from 'src/helpers/trim-and-empty-to-undefined';
 
-export class CreateCustomerDTO {
+export class CustomerDTO {
   @IsString({ message: 'O nome deve ser um texto' })
   @MinLength(2, { message: 'O nome deve ter pelo menos 2 caracteres' })
   @MaxLength(100, { message: 'O nome não pode ultrapassar 100 caracteres' })

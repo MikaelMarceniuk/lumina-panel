@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/providers/prisma/prisma.service';
-import { CreateCustomerDTO } from './dto/create-customer.dto';
+import { CustomerDTO } from './dto/customer.dto';
 import { CustomerPresenter } from './presenter/customer.presenter';
 import { GetManyQuery } from './query/get-many.query';
 import { Prisma } from 'generated/prisma/browser';
@@ -66,7 +66,7 @@ export class CustomerService {
     return new CustomerDetailsPresenter(customer);
   }
 
-  async create(dto: CreateCustomerDTO) {
+  async create(dto: CustomerDTO) {
     const email = dto.email.toLowerCase().trim();
     const document = dto.document?.replace(/\D/g, '');
     const zipCode = dto.zipCode?.replace(/\D/g, '');
@@ -102,5 +102,33 @@ export class CustomerService {
     });
 
     return new CustomerPresenter(customer);
+  }
+
+  async update(id: string, dto: CustomerDTO) {
+    const customerById = await this.prisma.customer.findUnique({
+      where: { id },
+    });
+
+    if (!customerById) {
+      throw new NotFoundException(`Cliente não encontrado`);
+    }
+
+    const updatedCustomer = await this.prisma.customer.update({
+      where: { id },
+      data: {
+        name: dto.name,
+        email: dto.email,
+        phone: dto.phone,
+        document: dto.document,
+        companyName: dto.companyName,
+        address: dto.address,
+        complement: dto.complement,
+        city: dto.city,
+        state: dto.state,
+        zipCode: dto.zipCode,
+      },
+    });
+
+    return new CustomerDetailsPresenter(updatedCustomer);
   }
 }
