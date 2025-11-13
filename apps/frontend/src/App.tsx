@@ -7,7 +7,7 @@ import { AppLayout } from './components/layout/app-layout'
 import { AuthProvider } from './providers/auth.provider'
 import { CustomerScreen } from './components/screens/customer/customer.screen'
 import { OrderScreen } from './components/screens/order.screen'
-import { ProductScreen } from './components/screens/product.screen'
+import { ProductScreen } from './components/screens/product/product.screen'
 import { ThemeProvider } from './providers/theme.provider'
 import { CustomerDetailsScreen } from './components/screens/customer-details/customer-details.screen'
 

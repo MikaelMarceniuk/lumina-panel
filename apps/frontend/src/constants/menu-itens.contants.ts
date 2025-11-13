@@ -28,13 +28,13 @@ export const menuItems: MenuItem[] = [
     icon: Users,
   },
   {
-    title: 'Pedidos',
-    url: '/dashboard/order',
-    icon: ClipboardList,
-  },
-  {
     title: 'Produtos',
     url: '/dashboard/product',
     icon: Package,
+  },
+  {
+    title: 'Pedidos',
+    url: '/dashboard/order',
+    icon: ClipboardList,
   },
 ]

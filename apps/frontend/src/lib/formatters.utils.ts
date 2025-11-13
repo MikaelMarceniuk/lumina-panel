@@ -193,3 +193,15 @@ export function maskValue(
       return value
   }
 }
+
+export function formatPriceFromCents(priceInCents: number) {
+  if (typeof priceInCents !== 'number' || isNaN(priceInCents)) {
+    throw new TypeError('O valor precisa ser um número.')
+  }
+
+  const price = priceInCents / 100
+  return price.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  })
+}
