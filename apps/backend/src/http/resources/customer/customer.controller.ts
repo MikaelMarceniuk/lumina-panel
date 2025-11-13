@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -33,5 +34,11 @@ export class CustomerController {
   @Patch(':id')
   async update(@Param('id') id: string, @Body() body: CustomerDTO) {
     return await this.customerService.update(id, body);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    console.log('id: ', id);
+    return await this.customerService.delete(id);
   }
 }

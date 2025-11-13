@@ -1,7 +1,7 @@
-import { Ellipsis, Eye, Plus } from 'lucide-react'
+import { Ellipsis, Eye, Plus, Trash2 } from 'lucide-react'
 import { Button } from '../../ui/button'
 import { CreateCustomerDialog } from './create-customer.dialog'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import {
   formatCNPJ,
   formatCPF,
@@ -32,6 +32,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useNavigate } from 'react-router'
+import { api } from '@/lib/axios'
 
 // TODO Improve filter logic
 const filtersSchema = z.object({
@@ -83,11 +84,22 @@ export const CustomerScreen = () => {
               <Eye />
               Visualizar
             </DropdownMenuItem>
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={async () => await mutateAsync(val!)}
+            >
+              <Trash2 className="text-inherit" />
+              Deletar
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ),
     },
   ]
+
+  const { mutateAsync } = useMutation({
+    mutationFn: async (id: string) => await api.delete(`/customer/${id}`),
+  })
 
   // TODO Improve error handling
   const { data, isFetching } = useQuery({

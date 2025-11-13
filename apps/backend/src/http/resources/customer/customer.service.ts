@@ -131,4 +131,12 @@ export class CustomerService {
 
     return new CustomerDetailsPresenter(updatedCustomer);
   }
+
+  async delete(id: string) {
+    await this.prisma.customer.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }
