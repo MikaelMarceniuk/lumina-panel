@@ -2,9 +2,14 @@ import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useCustomerDetails } from '../providers/customer-details.provider'
 import { formatDateToBrazil } from '@/lib/date-formatter.utils'
+import { MetadataSkeleton } from './metadata.tab.skeleton'
 
 export const MetadataTab = () => {
-  const { customer } = useCustomerDetails()
+  const { customer, isFetching } = useCustomerDetails()
+
+  if (isFetching) {
+    return <MetadataSkeleton />
+  }
 
   return (
     <div className="bg-muted/30 rounded-md p-4">

@@ -8,9 +8,14 @@ import {
 import { useCustomerDetails } from '../providers/customer-details.provider'
 import { Input } from '@/components/ui/input'
 import { CustomerDetailsTabWrapper } from '../components/customer-details-tab-wrapper'
+import { BasicInformationsTabSkeleton } from './basic-informations.tab.skeleton'
 
 export const BasicInformationsTab = () => {
-  const { form, isEditing } = useCustomerDetails()
+  const { form, isFetching, isEditing } = useCustomerDetails()
+
+  if (isFetching) {
+    return <BasicInformationsTabSkeleton />
+  }
 
   return (
     <div className="bg-muted/30 rounded-md p-4">
