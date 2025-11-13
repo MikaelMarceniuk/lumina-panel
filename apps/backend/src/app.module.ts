@@ -9,6 +9,7 @@ import { envSchema } from './config/env.config';
 import { UserModule } from './http/resources/user/user.module';
 import { SessionModule } from './providers/session/session.module';
 import { CustomerModule } from './http/resources/customer/customer.module';
+import { ProductModule } from './http/resources/product/product.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { CustomerModule } from './http/resources/customer/customer.module';
     AuthModule,
     UserModule,
     CustomerModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
