@@ -7,7 +7,7 @@ CREATE TABLE "products" (
     "description" TEXT,
     "price_in_cents" INTEGER NOT NULL,
     "stock" INTEGER NOT NULL DEFAULT 0,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
