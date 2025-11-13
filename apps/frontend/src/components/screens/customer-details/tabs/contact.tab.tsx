@@ -9,6 +9,7 @@ import { useCustomerDetails } from '../providers/customer-details.provider'
 import { Input } from '@/components/ui/input'
 import { CustomerDetailsTabWrapper } from '../components/customer-details-tab-wrapper'
 import { ContactTabSkeleton } from './contact.tab.skeleton'
+import { MaskedInput } from '@/components/masked-input'
 
 export const ContactTab = () => {
   const { form, isFetching, isEditing } = useCustomerDetails()
@@ -48,8 +49,8 @@ export const ContactTab = () => {
             <FormItem className="w-full">
               <FormLabel>Telefone</FormLabel>
               <FormControl>
-                <Input
-                  type="tel"
+                <MaskedInput
+                  mask="phone"
                   placeholder="(11) 99999-9999"
                   {...field}
                   disabled={!isEditing}

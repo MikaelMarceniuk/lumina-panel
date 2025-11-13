@@ -125,3 +125,71 @@ export const formatPhone = (phoneRaw: string): string => {
   // fallback: retorna somente dígitos
   return digits
 }
+
+/**
+ * Remove a formatação de uma string mascarada, mantendo apenas os dígitos.
+ * Pode ser usada para CPF, CNPJ, CEP, telefone, etc.
+ *
+ * Exemplo:
+ *   unmaskValue('(11) 91234-5678') → "11912345678"
+ *   unmaskValue('123.456.789-09') → "12345678909"
+ *   unmaskValue('12.345.678/0001-99') → "12345678000199"
+ */
+export function unmaskValue(value: string | undefined | null): string {
+  if (!value) return ''
+  return value.replace(/\D/g, '')
+}
+
+import type { AvailableMaskName } from '@/lib/masks.utils'
+
+export function maskValue(
+  value: string | undefined | null,
+  mask: AvailableMaskName
+): string {
+  if (!value) return ''
+
+  const digits = value.replace(/\D/g, '')
+
+  switch (mask) {
+    case 'phone':
+      if (digits.length <= 10)
+        return digits.replace(
+          /(\d{2})(\d{4})(\d{0,4})/,
+          (_, a, b, c) => `(${a}) ${b}${c ? '-' + c : ''}`
+        )
+      return digits.replace(
+        /(\d{2})(\d{5})(\d{0,4})/,
+        (_, a, b, c) => `(${a}) ${b}${c ? '-' + c : ''}`
+      )
+
+    case 'cpf':
+      return digits.replace(
+        /(\d{3})(\d{3})(\d{3})(\d{0,2})/,
+        (_, a, b, c, d) =>
+          [a, b, c].filter(Boolean).join('.') + (d ? '-' + d : '')
+      )
+
+    case 'cnpj':
+      return digits.replace(
+        /(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/,
+        (_, a, b, c, d, e) => `${a}.${b}.${c}/${d}${e ? '-' + e : ''}`
+      )
+
+    case 'cpfCnpj':
+      if (digits.length > 11) return maskValue(digits, 'cnpj')
+      return maskValue(digits, 'cpf')
+
+    case 'cep':
+      return digits.replace(/(\d{5})(\d{0,3})/, (_, a, b) =>
+        b ? `${a}-${b}` : a
+      )
+
+    case 'date':
+      return digits.replace(/(\d{2})(\d{2})(\d{0,4})/, (_, a, b, c) =>
+        [a, b, c].filter(Boolean).join('/')
+      )
+
+    default:
+      return value
+  }
+}

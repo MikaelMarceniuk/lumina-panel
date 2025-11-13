@@ -9,6 +9,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { CustomerDetailsTabWrapper } from '../components/customer-details-tab-wrapper'
 import { AddressTabSkeleton } from './address.tab.skeleton'
+import { MaskedInput } from '@/components/masked-input'
 
 export const AddressTab = () => {
   const { form, isFetching, isEditing } = useCustomerDetails()
@@ -29,7 +30,8 @@ export const AddressTab = () => {
             <FormItem className="w-full">
               <FormLabel>CEP</FormLabel>
               <FormControl>
-                <Input
+                <MaskedInput
+                  mask="cep"
                   placeholder="00000-000"
                   {...field}
                   disabled={!isEditing}

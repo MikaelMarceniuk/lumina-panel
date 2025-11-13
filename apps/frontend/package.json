@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@maskito/core": "^4.0.0",
+    "@maskito/react": "^4.0.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-collapsible": "^1.1.12",

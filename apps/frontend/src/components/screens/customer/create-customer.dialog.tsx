@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useCreateCustomer } from './useCreateCustomer.hook'
 import { useState } from 'react'
+import { MaskedInput } from '@/components/masked-input'
 
 type CreateCustomerDialogProps = {
   children: React.ReactNode
@@ -105,8 +106,8 @@ export const CreateCustomerDialog: React.FC<CreateCustomerDialogProps> = ({
                   <FormItem className="w-full">
                     <FormLabel>Telefone</FormLabel>
                     <FormControl>
-                      <Input
-                        type="tel"
+                      <MaskedInput
+                        mask="phone"
                         placeholder="(11) 99999-9999"
                         {...field}
                       />
@@ -123,7 +124,11 @@ export const CreateCustomerDialog: React.FC<CreateCustomerDialogProps> = ({
                   <FormItem className="w-full">
                     <FormLabel>Documento (CPF ou CNPJ)</FormLabel>
                     <FormControl>
-                      <Input placeholder="Digite o CPF ou CNPJ" {...field} />
+                      <MaskedInput
+                        mask="cpfCnpj"
+                        placeholder="Digite o CPF ou CNPJ"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -139,7 +144,11 @@ export const CreateCustomerDialog: React.FC<CreateCustomerDialogProps> = ({
                   <FormItem className="w-full">
                     <FormLabel>CEP</FormLabel>
                     <FormControl>
-                      <Input placeholder="00000-000" {...field} />
+                      <MaskedInput
+                        mask="cep"
+                        placeholder="00000-000"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

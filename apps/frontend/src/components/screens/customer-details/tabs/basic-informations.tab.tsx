@@ -9,6 +9,7 @@ import { useCustomerDetails } from '../providers/customer-details.provider'
 import { Input } from '@/components/ui/input'
 import { CustomerDetailsTabWrapper } from '../components/customer-details-tab-wrapper'
 import { BasicInformationsTabSkeleton } from './basic-informations.tab.skeleton'
+import { MaskedInput } from '@/components/masked-input'
 
 export const BasicInformationsTab = () => {
   const { form, isFetching, isEditing } = useCustomerDetails()
@@ -47,7 +48,8 @@ export const BasicInformationsTab = () => {
             <FormItem className="w-full">
               <FormLabel>Documento</FormLabel>
               <FormControl>
-                <Input
+                <MaskedInput
+                  mask="cpfCnpj"
                   placeholder="Digite o CPF ou CNPJ"
                   {...field}
                   disabled={!isEditing}

@@ -7,6 +7,7 @@ import {
   Matches,
 } from 'class-validator';
 import { TrimAndEmptyToUndefined } from 'src/helpers/trim-and-empty-to-undefined';
+import { Unmask } from 'src/http/decorators/unmask.decorator';
 
 export class CustomerDTO {
   @IsString({ message: 'O nome deve ser um texto' })
@@ -22,6 +23,7 @@ export class CustomerDTO {
   @IsString({ message: 'O telefone deve ser um texto' })
   @MinLength(8, { message: 'Telefone muito curto' })
   @MaxLength(20, { message: 'Telefone muito longo' })
+  @Unmask()
   phone?: string;
 
   @IsOptional()
@@ -29,6 +31,7 @@ export class CustomerDTO {
   @IsString({ message: 'O documento deve ser um texto' })
   @MinLength(11, { message: 'Documento muito curto' })
   @MaxLength(18, { message: 'Documento muito longo' })
+  @Unmask()
   document?: string;
 
   @IsOptional()
@@ -63,5 +66,6 @@ export class CustomerDTO {
   @TrimAndEmptyToUndefined()
   @IsString({ message: 'O CEP deve ser um texto' })
   @Matches(/^\d{5}-?\d{3}$/, { message: 'CEP inválido' })
+  @Unmask()
   zipCode?: string;
 }
