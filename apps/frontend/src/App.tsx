@@ -10,6 +10,7 @@ import { OrderScreen } from './components/screens/order.screen'
 import { ProductScreen } from './components/screens/product/product.screen'
 import { ThemeProvider } from './providers/theme.provider'
 import { CustomerDetailsScreen } from './components/screens/customer-details/customer-details.screen'
+import { CreateProductScreen } from './components/screens/create-product/create-product.screen'
 
 const App = () => {
   return (
@@ -29,8 +30,12 @@ const App = () => {
                   path="/dashboard/customer/:id"
                   element={<CustomerDetailsScreen />}
                 />
-                <Route path="/dashboard/order" element={<OrderScreen />} />
                 <Route path="/dashboard/product" element={<ProductScreen />} />
+                <Route
+                  path="/dashboard/product/create"
+                  element={<CreateProductScreen />}
+                />
+                <Route path="/dashboard/order" element={<OrderScreen />} />
               </Route>
             </Routes>
             <Toaster richColors />

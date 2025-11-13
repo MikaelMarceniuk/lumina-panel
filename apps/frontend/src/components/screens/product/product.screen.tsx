@@ -25,9 +25,10 @@ import { formatPriceFromCents } from '@/lib/formatters.utils'
 import type { ColumnDef } from '@/types/column-def.type'
 import type { Product } from '@/types/product.type'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Check, EllipsisIcon, Eye, X } from 'lucide-react'
+import { Check, EllipsisIcon, Eye, Plus, X } from 'lucide-react'
 import { useState } from 'react'
-import z, { keyof } from 'zod'
+import { useNavigate } from 'react-router'
+import z from 'zod'
 
 const filtersSchema = z.object({
   q: z.string(),
@@ -47,6 +48,7 @@ const initialFiltersValue: FiltersSchema = {
 }
 
 export const ProductScreen = () => {
+  const navigate = useNavigate()
   const { page, limit, handlePageChange, resetPagination } = usePagination()
   const [filters, setFilters] = useState(initialFiltersValue)
   const debouncedFilters = useDebounce(filters, 600)
@@ -138,6 +140,10 @@ export const ProductScreen = () => {
     <ScreenWrapper>
       <div className="flex justify-between">
         <h1 className="text-4xl">Produtos</h1>
+        <Button onClick={() => navigate('/dashboard/product/create')}>
+          <Plus />
+          Novo produto
+        </Button>
       </div>
 
       <div className="flex gap-4">
