@@ -6,6 +6,14 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+api.interceptors.request.use(async (config) => {
+  if (window.location.hostname === 'localhost') {
+    const delay = Math.floor(Math.random() * 2000) + 1000
+    await new Promise((resolve) => setTimeout(resolve, delay))
+  }
+  return config
+})
+
 // api.interceptors.response.use(
 //   (response) => response,
 //   async (error) => {
