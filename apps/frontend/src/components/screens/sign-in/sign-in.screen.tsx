@@ -79,6 +79,7 @@ export const SignInScreen = ({
                     type="submit"
                     className="w-full"
                     disabled={form.formState.isSubmitting}
+                    isLoading={form.formState.isSubmitting}
                   >
                     Entrar
                   </Button>

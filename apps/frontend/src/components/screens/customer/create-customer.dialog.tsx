@@ -218,7 +218,11 @@ export const CreateCustomerDialog: React.FC<CreateCustomerDialogProps> = ({
             </div>
 
             <DialogFooter>
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full"
+                isLoading={form.formState.isSubmitting}
+              >
                 Criar cliente
               </Button>
             </DialogFooter>

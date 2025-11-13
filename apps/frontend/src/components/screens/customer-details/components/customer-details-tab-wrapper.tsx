@@ -28,7 +28,10 @@ export const CustomerDetailsTabWrapper: React.FC<
     <Form {...form}>
       <form className="space-y-4" onSubmit={handleOnSubmit}>
         {children}
-        <Button className={cn(isEditing ? 'block' : 'hidden', 'w-full')}>
+        <Button
+          className={cn(isEditing ? 'block' : 'hidden', 'w-full')}
+          isLoading={form.formState.isSubmitting}
+        >
           Salvar alterações
         </Button>
       </form>
