@@ -56,3 +56,34 @@ model Customer {
 
   @@map("customers")
 }
+
+model Product {
+  id           String  @id @default(cuid())
+  name         String
+  slug         String  @unique
+  sku          String  @unique
+  description  String?
+  priceInCents Int     @map("price_in_cents")
+  stock        Int     @default(0)
+  active       Boolean @default(true)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  categories Category[] @relation("product_categories")
+
+  @@map("products")
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  products Product[] @relation("product_categories")
+
+  @@map("categories")
+}
