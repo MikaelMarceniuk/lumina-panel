@@ -6,19 +6,31 @@ import { CreateProductDTO } from './dto/create-product.dto';
 import { slugify } from 'src/utils/slugify.util';
 import { ProductPresenter } from './presenter/product.presenter';
 import { PrismaClientKnownRequestError } from 'generated/prisma/internal/prismaNamespace';
+import { Prisma } from 'generated/prisma/client';
 
 @Injectable()
 export class ProductService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getMany({ page, limit }: GetManyQuery) {
+  async getMany({ q, status, page = 1, limit = 10 }: GetManyQuery) {
+    const where: Prisma.ProductWhereInput = {
+      ...(status !== undefined && { isActive: status }),
+      ...(q && {
+        OR: [
+          { name: { contains: q, mode: 'insensitive' } },
+          { sku: { contains: q, mode: 'insensitive' } },
+        ],
+      }),
+    };
+
     const [products, totalCount] = await Promise.all([
       this.prisma.product.findMany({
         skip: (page - 1) * limit,
         take: limit,
         orderBy: { createdAt: 'desc' },
+        where,
       }),
-      this.prisma.customer.count(),
+      this.prisma.product.count({ where }),
     ]);
 
     return new ProductPaginated({ products, page, limit, totalCount });

@@ -3,12 +3,22 @@ import { ScreenWrapper } from '@/components/layout/screen-wrapper.layout'
 import { AppTable } from '@/components/table/app-table'
 import { AppPagination } from '@/components/table/app-table-pagination'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useDebounce } from '@/hooks/use-debounce.hook'
 import { usePagination } from '@/hooks/use-pagination.hook'
 import { api } from '@/lib/axios'
 import { formatPriceFromCents } from '@/lib/formatters.utils'
@@ -16,9 +26,30 @@ import type { ColumnDef } from '@/types/column-def.type'
 import type { Product } from '@/types/product.type'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Check, EllipsisIcon, Eye, X } from 'lucide-react'
+import { useState } from 'react'
+import z, { keyof } from 'zod'
+
+const filtersSchema = z.object({
+  q: z.string(),
+  status: z.enum(['all', 'active', 'inactive']),
+})
+type FiltersSchema = z.infer<typeof filtersSchema>
+
+const AvailableStatus = {
+  all: 'Todos os status',
+  active: 'Ativo',
+  inactive: 'Inativo',
+}
+
+const initialFiltersValue: FiltersSchema = {
+  q: '',
+  status: 'all',
+}
 
 export const ProductScreen = () => {
-  const { page, limit, handlePageChange } = usePagination()
+  const { page, limit, handlePageChange, resetPagination } = usePagination()
+  const [filters, setFilters] = useState(initialFiltersValue)
+  const debouncedFilters = useDebounce(filters, 600)
 
   const columns: ColumnDef<Product>[] = [
     {
@@ -89,18 +120,57 @@ export const ProductScreen = () => {
   ]
 
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ['/product', page, limit],
-    queryFn: async () => await getProductAction({ page, limit }),
+    queryKey: ['/product', debouncedFilters, page, limit],
+    queryFn: async () =>
+      await getProductAction({ ...debouncedFilters, page, limit }),
   })
 
   const { mutateAsync: toggleActive } = useMutation({
     mutationFn: async (id: string) => await api.put(`/product/${id}/is_active`),
   })
 
+  const handleChange = (key: keyof FiltersSchema, value: string) => {
+    setFilters((old) => ({ ...old, [key]: value }))
+    resetPagination()
+  }
+
   return (
     <ScreenWrapper>
       <div className="flex justify-between">
         <h1 className="text-4xl">Produtos</h1>
+      </div>
+
+      <div className="flex gap-4">
+        <Input
+          className="max-w-72"
+          placeholder="Buscar..."
+          value={filters.q}
+          onChange={(e) => handleChange('q', e.target.value)}
+        />
+        <Select
+          value={filters.status}
+          onValueChange={(v) => handleChange('status', v)}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(AvailableStatus).map(([key, value]) => (
+              <SelectItem key={key} value={key}>
+                {value}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setFilters(initialFiltersValue)
+            resetPagination()
+          }}
+        >
+          Limpar
+        </Button>
       </div>
 
       <AppTable
