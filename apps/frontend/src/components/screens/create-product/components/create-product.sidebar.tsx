@@ -13,6 +13,7 @@ export const CreateProductSidebar = () => {
           key={key}
           variant="ghost"
           className="w-full cursor-pointer justify-between"
+          type="button"
           onClick={() => setCurrentTab(key as keyof typeof CreateProductTabs)}
         >
           <span className="flex items-center gap-2">
@@ -25,6 +26,7 @@ export const CreateProductSidebar = () => {
       <Button
         variant="default"
         className="w-full cursor-pointer justify-between"
+        type="submit"
       >
         <span className="flex items-center gap-2">
           <Save className="h-4 w-4" />
