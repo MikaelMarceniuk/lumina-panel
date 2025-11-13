@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import { PrismaClient } from 'generated/prisma/client';
 
 export const userSeed = async (ctx: PrismaClient) => {
+  console.log('🌱 Seeding admin...');
   const email = 'admin@lumina.dev';
   const password = '12345678';
   const password_hash = await bcrypt.hash(password, 10);

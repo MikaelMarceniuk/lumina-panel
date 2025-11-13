@@ -1,6 +1,7 @@
 import { getProductAction } from '@/actions/get-products.action'
 import { AppTable } from '@/components/table/app-table'
 import { AppPagination } from '@/components/table/app-table-pagination'
+import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +13,7 @@ import { formatPriceFromCents } from '@/lib/formatters.utils'
 import type { ColumnDef } from '@/types/column-def.type'
 import type { Product } from '@/types/product.type'
 import { useQuery } from '@tanstack/react-query'
-import { Check, EllipsisIcon, Eye, Trash2, X } from 'lucide-react'
+import { Check, EllipsisIcon, Eye, X } from 'lucide-react'
 
 export const ProductScreen = () => {
   const { page, limit, handlePageChange } = usePagination()
@@ -38,6 +39,11 @@ export const ProductScreen = () => {
     {
       key: 'isActive',
       title: 'Status',
+      render: (val) => (
+        <Badge variant={val ? 'success' : 'destructive'}>
+          {val ? 'Ativo' : 'Inativo'}
+        </Badge>
+      ),
     },
     {
       title: '',
@@ -54,7 +60,9 @@ export const ProductScreen = () => {
               <Eye />
               Visualizar
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              variant={row.isActive ? 'destructive' : 'success'}
+            >
               {row.isActive ? (
                 <>
                   <X className="text-inherit" />
