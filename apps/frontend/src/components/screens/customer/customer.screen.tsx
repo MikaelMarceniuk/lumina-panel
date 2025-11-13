@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useNavigate } from 'react-router'
 import { api } from '@/lib/axios'
+import { ScreenWrapper } from '@/components/layout/screen-wrapper.layout'
 
 // TODO Improve filter logic
 const filtersSchema = z.object({
@@ -114,7 +115,7 @@ export const CustomerScreen = () => {
   }
 
   return (
-    <main className="space-y-4 px-4 py-2">
+    <ScreenWrapper>
       <div className="flex justify-between">
         <h1 className="text-4xl">Clientes</h1>
         <CreateCustomerDialog>
@@ -166,6 +167,6 @@ export const CustomerScreen = () => {
         onChangePage={handlePageChange}
         className="justify-end"
       />
-    </main>
+    </ScreenWrapper>
   )
 }

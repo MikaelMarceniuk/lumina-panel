@@ -1,4 +1,5 @@
 import { getProductAction } from '@/actions/get-products.action'
+import { ScreenWrapper } from '@/components/layout/screen-wrapper.layout'
 import { AppTable } from '@/components/table/app-table'
 import { AppPagination } from '@/components/table/app-table-pagination'
 import { Badge } from '@/components/ui/badge'
@@ -97,7 +98,7 @@ export const ProductScreen = () => {
   })
 
   return (
-    <div>
+    <ScreenWrapper>
       <div className="flex justify-between">
         <h1 className="text-4xl">Produtos</h1>
       </div>
@@ -113,6 +114,6 @@ export const ProductScreen = () => {
         onChangePage={handlePageChange}
         className="justify-end"
       />
-    </div>
+    </ScreenWrapper>
   )
 }
