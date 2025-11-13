@@ -5,6 +5,7 @@ import { ProductPaginated } from './presenter/product-paginated.presenter';
 import { CreateProductDTO } from './dto/create-product.dto';
 import { slugify } from 'src/utils/slugify.util';
 import { ProductPresenter } from './presenter/product.presenter';
+import { PrismaClientKnownRequestError } from 'generated/prisma/internal/prismaNamespace';
 
 @Injectable()
 export class ProductService {
@@ -57,5 +58,33 @@ export class ProductService {
     });
 
     return new ProductPresenter(product);
+  }
+
+  async toggleActive(id: string) {
+    try {
+      const updated = await this.prisma.product.update({
+        where: { id },
+        data: {
+          isActive: {
+            set: !(
+              await this.prisma.product.findUnique({
+                where: { id },
+                select: { isActive: true },
+              })
+            )?.isActive,
+          },
+        },
+      });
+
+      return new ProductPresenter(updated);
+    } catch (error: any) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new Error(`Produto nao encontrado`);
+      }
+      throw error;
+    }
   }
 }

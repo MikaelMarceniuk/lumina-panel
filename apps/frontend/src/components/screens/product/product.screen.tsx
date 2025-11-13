@@ -9,10 +9,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { usePagination } from '@/hooks/use-pagination.hook'
+import { api } from '@/lib/axios'
 import { formatPriceFromCents } from '@/lib/formatters.utils'
 import type { ColumnDef } from '@/types/column-def.type'
 import type { Product } from '@/types/product.type'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Check, EllipsisIcon, Eye, X } from 'lucide-react'
 
 export const ProductScreen = () => {
@@ -62,6 +63,11 @@ export const ProductScreen = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               variant={row.isActive ? 'destructive' : 'success'}
+              onClick={async () =>
+                await toggleActive(val as string, {
+                  onSuccess: () => refetch(),
+                })
+              }
             >
               {row.isActive ? (
                 <>
@@ -81,9 +87,13 @@ export const ProductScreen = () => {
     },
   ]
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, refetch } = useQuery({
     queryKey: ['/product', page, limit],
     queryFn: async () => await getProductAction({ page, limit }),
+  })
+
+  const { mutateAsync: toggleActive } = useMutation({
+    mutationFn: async (id: string) => await api.put(`/product/${id}/is_active`),
   })
 
   return (

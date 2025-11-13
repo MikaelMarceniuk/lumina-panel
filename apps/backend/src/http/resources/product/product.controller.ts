@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { GetManyQuery } from './query/get-many.query';
 import { CreateProductDTO } from './dto/create-product.dto';
@@ -15,5 +15,10 @@ export class ProductController {
   @Post()
   async create(@Body() body: CreateProductDTO) {
     return await this.productService.create(body);
+  }
+
+  @Put(':id/is_active')
+  async toggleActive(@Param('id') id: string) {
+    return await this.productService.toggleActive(id);
   }
 }
