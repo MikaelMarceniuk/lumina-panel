@@ -3,13 +3,19 @@ import { z } from 'zod'
 const basicInfoSchema = z.object({
   name: z.string().min(1, 'O nome do produto é obrigatório'),
   sku: z.string().min(1, 'O SKU é obrigatório'),
-  description: z.string().optional(),
 })
 
 const priceStockSchema = z.object({
-  priceInCents: z.number().min(0, 'O preço não pode ser negativo'),
+  priceInCents: z.string().refine(
+    (val) => {
+      if (val === '') return true
+      const numeric = Number(val.replace(/\D/g, ''))
+      return !isNaN(numeric) && numeric >= 0
+    },
+    { message: 'O preço não pode ser negativo' }
+  ),
   stock: z.number().min(0, 'O estoque não pode ser negativo'),
-  isActive: z.boolean(),
+  isActive: z.enum(['Ativo', 'Inativo']),
 })
 
 const categoriesSchema = z.object({
@@ -40,12 +46,11 @@ export const formDefaultValues: CreateProductSchema = {
   basicInfo: {
     name: '',
     sku: '',
-    description: '',
   },
   priceStock: {
-    priceInCents: 0,
+    priceInCents: '',
     stock: 0,
-    isActive: true,
+    isActive: 'Ativo',
   },
   categories: {
     categories: [],
