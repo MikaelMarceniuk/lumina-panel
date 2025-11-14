@@ -10,7 +10,8 @@ export function CustomerDetailsScreen() {
 
   if (!id) {
     toast.error('Cliente não foi encontrado.')
-    return navigate('/dashboard/customer', { replace: true })
+    navigate('/dashboard/customer', { replace: true })
+    return null
   }
 
   return (

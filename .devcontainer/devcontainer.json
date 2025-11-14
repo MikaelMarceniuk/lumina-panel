@@ -14,7 +14,8 @@
         "vivaxy.vscode-conventional-commits",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "mhutchie.git-graph"
+        "mhutchie.git-graph",
+        "linjun.dbeaver-support"
       ]
     }
   }
