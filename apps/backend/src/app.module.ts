@@ -10,6 +10,7 @@ import { UserModule } from './http/resources/user/user.module';
 import { SessionModule } from './providers/session/session.module';
 import { CustomerModule } from './http/resources/customer/customer.module';
 import { ProductModule } from './http/resources/product/product.module';
+import { CategoryModule } from './http/resources/category/category.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { ProductModule } from './http/resources/product/product.module';
     UserModule,
     CustomerModule,
     ProductModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
