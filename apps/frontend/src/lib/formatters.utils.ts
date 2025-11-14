@@ -205,3 +205,12 @@ export function formatPriceFromCents(priceInCents: number) {
     currency: 'BRL',
   })
 }
+
+export const toCents = (value: string): number => {
+  const clean = value
+    .replace(/\s/g, '')
+    .replace(/[^\d,.-]/g, '')
+    .replace(',', '.')
+
+  return Math.round(parseFloat(clean) * 100)
+}

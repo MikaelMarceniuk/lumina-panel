@@ -4,7 +4,7 @@ import { useCreateProduct } from '../provider/create-product.provider'
 import { CreateProductTabs } from '../constants/tabs'
 
 export const CreateProductSidebar = () => {
-  const { currentTab, setCurrentTab } = useCreateProduct()
+  const { isSubmitting, currentTab, setCurrentTab } = useCreateProduct()
 
   return (
     <div className="flex flex-col space-y-2 pr-4">
@@ -25,13 +25,18 @@ export const CreateProductSidebar = () => {
       ))}
       <Button
         variant="default"
-        className="w-full cursor-pointer justify-between"
+        className="w-full cursor-pointer justify-start"
         type="submit"
+        isLoading={isSubmitting}
       >
-        <span className="flex items-center gap-2">
-          <Save className="h-4 w-4" />
-          Salvar produto
-        </span>
+        {isSubmitting ? (
+          <span>Salvando produto...</span>
+        ) : (
+          <span className="flex items-center gap-2">
+            <Save className="h-4 w-4" />
+            Salvar produto
+          </span>
+        )}
       </Button>
     </div>
   )

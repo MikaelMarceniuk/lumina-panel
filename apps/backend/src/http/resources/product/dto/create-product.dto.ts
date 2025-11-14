@@ -4,12 +4,22 @@ import {
   IsBoolean,
   IsInt,
   IsArray,
-  IsUUID,
   IsNotEmpty,
   Min,
   MaxLength,
+  ValidateIf,
+  ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { isCuid } from '@paralleldrive/cuid2';
+
+export class CategoryItemDto {
+  @ValidateIf((obj) => isCuid(obj.id))
+  id: string;
+
+  @IsString()
+  name: string;
+}
 
 export class CreateProductDTO {
   @IsString()
@@ -44,6 +54,7 @@ export class CreateProductDTO {
 
   @IsOptional()
   @IsArray()
-  @IsUUID('all', { each: true })
-  categories?: string[];
+  @ValidateNested({ each: true })
+  @Type(() => CategoryItemDto)
+  categories?: CategoryItemDto[];
 }

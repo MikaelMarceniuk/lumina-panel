@@ -61,7 +61,7 @@ export class ProductService {
         ...(p.categories?.length
           ? {
               categories: {
-                connect: p.categories.map((id) => ({ id })),
+                connect: p.categories.map(({ id }) => ({ id })),
               },
             }
           : {}),

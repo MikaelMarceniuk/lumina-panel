@@ -5,9 +5,16 @@ import type { Category } from '@/types/category.type'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import { MultiSelect } from '@/components/multi-select'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form'
+import { useCreateProduct } from '../provider/create-product.provider'
 
 export const CategoriesTab = () => {
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
+  const { form } = useCreateProduct()
   const [query, setQuery] = useState('')
 
   const { data, isFetching } = useQuery({
@@ -22,17 +29,28 @@ export const CategoriesTab = () => {
 
   return (
     <TabWrapper title={CreateProductTabs.categories.title}>
-      <MultiSelect
-        data={data || []}
-        placeholder="Selecionar categorias..."
-        itemLabel={{
-          singular: 'categoria',
-          plural: 'categorias',
-        }}
-        value={selectedCategories}
-        onChangeHandler={setSelectedCategories}
-        onQueryChange={setQuery}
-        isLoading={isFetching}
+      <FormField
+        control={form.control}
+        name="categories.categories"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <MultiSelect
+                data={data || []}
+                placeholder="Selecionar categorias..."
+                itemLabel={{
+                  singular: 'categoria',
+                  plural: 'categorias',
+                }}
+                value={field.value || []}
+                onChangeHandler={field.onChange}
+                onQueryChange={setQuery}
+                isLoading={isFetching}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
       />
     </TabWrapper>
   )

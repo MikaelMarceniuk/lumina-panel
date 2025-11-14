@@ -19,7 +19,14 @@ const priceStockSchema = z.object({
 })
 
 const categoriesSchema = z.object({
-  categories: z.array(z.string()).optional(),
+  categories: z
+    .array(
+      z.object({
+        id: z.cuid(),
+        name: z.string(),
+      })
+    )
+    .optional(),
 })
 
 const imagesSchema = z.object({

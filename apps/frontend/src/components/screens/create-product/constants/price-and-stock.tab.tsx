@@ -16,13 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { formatPriceFromCents } from '@/lib/formatters.utils'
 import { MaskedInput } from '@/components/masked-input'
 
 export const PriceAndStockTab = () => {
   const { form } = useCreateProduct()
-
-  console.log('form.values: ', form.getValues())
 
   return (
     <TabWrapper
@@ -34,13 +31,10 @@ export const PriceAndStockTab = () => {
         name="priceStock.priceInCents"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Preço em centavos</FormLabel>
+            <FormLabel>Preço</FormLabel>
             <FormControl>
               <MaskedInput mask="money" {...field} />
             </FormControl>
-            <span className="text-muted-foreground">
-              {formatPriceFromCents(Number(field.value.replace(/\D/g, '')))}
-            </span>
             <FormMessage />
           </FormItem>
         )}
@@ -53,7 +47,14 @@ export const PriceAndStockTab = () => {
           <FormItem>
             <FormLabel>Quantidade em estoque</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input
+                type="number"
+                {...field}
+                onChange={(e) => {
+                  const val = e.target.valueAsNumber
+                  field.onChange(isNaN(val) ? '' : val)
+                }}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
