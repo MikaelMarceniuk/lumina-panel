@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/providers/prisma/prisma.service';
 import { GetManyQuery } from './query/get-many.query';
 import { ProductPaginated } from './presenter/product-paginated.presenter';
@@ -7,6 +11,7 @@ import { slugify } from 'src/utils/slugify.util';
 import { ProductPresenter } from './presenter/product.presenter';
 import { PrismaClientKnownRequestError } from 'generated/prisma/internal/prismaNamespace';
 import { Prisma } from 'generated/prisma/client';
+import { ProductDetailsPresenter } from './presenter/product-details.presenter';
 
 @Injectable()
 export class ProductService {
@@ -34,6 +39,20 @@ export class ProductService {
     ]);
 
     return new ProductPaginated({ products, page, limit, totalCount });
+  }
+
+  async getOne(id: string) {
+    const product = await this.prisma.product.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    return new ProductDetailsPresenter(product);
   }
 
   async create(p: CreateProductDTO) {

@@ -12,6 +12,11 @@ export class ProductController {
     return await this.productService.getMany(q);
   }
 
+  @Get(':id')
+  async getOne(@Param('id') id: string) {
+    return await this.productService.getOne(id);
+  }
+
   @Post()
   async create(@Body() body: CreateProductDTO) {
     return await this.productService.create(body);
