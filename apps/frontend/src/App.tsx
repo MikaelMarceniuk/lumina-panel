@@ -6,12 +6,12 @@ import { Toaster } from './components/ui/sonner'
 import { AppLayout } from './components/layout/app-layout'
 import { AuthProvider } from './providers/auth.provider'
 import { CustomerScreen } from './components/screens/customer/customer.screen'
-import { OrderScreen } from './components/screens/order.screen'
 import { ProductScreen } from './components/screens/product/product.screen'
 import { ThemeProvider } from './providers/theme.provider'
 import { CustomerDetailsScreen } from './components/screens/customer-details/customer-details.screen'
 import { CreateProductScreen } from './components/screens/create-product/create-product.screen'
 import { ProductDetailsScreen } from './components/screens/product-details/product-details.screen'
+import { OrderScreen } from './components/screens/order/order.screen'
 
 const App = () => {
   return (
