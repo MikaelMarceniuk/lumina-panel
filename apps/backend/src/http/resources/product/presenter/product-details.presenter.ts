@@ -1,6 +1,8 @@
-import { Product } from 'generated/prisma/client';
+import { Category, Product } from 'generated/prisma/client';
 
-type ProductDetailsPresenterParams = {} & Product;
+type ProductDetailsPresenterParams = {
+  categories: Category[] | undefined;
+} & Product;
 
 export class ProductDetailsPresenter {
   id: string;
@@ -13,6 +15,7 @@ export class ProductDetailsPresenter {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  categories: Category[] | undefined;
 
   constructor({
     id,
@@ -25,6 +28,7 @@ export class ProductDetailsPresenter {
     isActive,
     createdAt,
     updatedAt,
+    categories,
   }: ProductDetailsPresenterParams) {
     this.id = id;
     this.name = name;
@@ -37,5 +41,6 @@ export class ProductDetailsPresenter {
     this.isActive = isActive;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.categories = categories;
   }
 }

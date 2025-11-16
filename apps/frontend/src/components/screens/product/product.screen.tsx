@@ -91,7 +91,9 @@ export const ProductScreen = () => {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate(`/dashboard/product/${val}`)}
+            >
               <Eye />
               Visualizar
             </DropdownMenuItem>

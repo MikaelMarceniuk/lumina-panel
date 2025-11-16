@@ -28,6 +28,7 @@ type MultiSelectProps = {
   onChangeHandler: (value: MultiSelectData[]) => void
   onQueryChange: (q: string) => void
   isLoading: boolean
+  disabled?: boolean
 }
 
 export const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -38,6 +39,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   onChangeHandler,
   onQueryChange,
   isLoading,
+  disabled,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [query, setQuery] = useState('')
@@ -132,6 +134,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           role="combobox"
           aria-expanded={isOpen}
           className="min-w-52 justify-between"
+          disabled={disabled}
         >
           <div className="space-x-2">
             {value.length == 0 && placeholder}

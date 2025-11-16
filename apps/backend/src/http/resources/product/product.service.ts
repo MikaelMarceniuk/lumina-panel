@@ -46,6 +46,9 @@ export class ProductService {
       where: {
         id,
       },
+      include: {
+        categories: true,
+      },
     });
 
     if (!product) {

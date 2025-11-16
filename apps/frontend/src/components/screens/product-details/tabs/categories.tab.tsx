@@ -1,20 +1,21 @@
 import { TabWrapper } from '@/components/layout/tab-wrapper'
-import { CreateProductTabs } from './tabs'
-import { useState } from 'react'
-import type { Category } from '@/types/category.type'
-import { useQuery } from '@tanstack/react-query'
-import { api } from '@/lib/axios'
-import { MultiSelect } from '@/components/multi-select'
+import { useProductDetails } from '../provider/product-details.provider'
+import { ProductDetailsTabs } from '../constants/product-details.tabs.constants'
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage,
 } from '@/components/ui/form'
-import { useCreateProduct } from '../provider/create-product.provider'
+import { MultiSelect } from '@/components/multi-select'
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '@/lib/axios'
+import type { Category } from '@/types/category.type'
+import { CategoriesTabSkeleton } from './categories.tab.skeleton'
 
 export const CategoriesTab = () => {
-  const { form } = useCreateProduct()
+  const { form, isLoading } = useProductDetails()
   const [query, setQuery] = useState('')
 
   // TODO Create a useCategoryHook
@@ -28,8 +29,10 @@ export const CategoriesTab = () => {
       ).data,
   })
 
+  if (isLoading) return <CategoriesTabSkeleton />
+
   return (
-    <TabWrapper title={CreateProductTabs.categories.title}>
+    <TabWrapper title={ProductDetailsTabs.categories.title}>
       <FormField
         control={form.control}
         name="categories.categories"
@@ -47,6 +50,7 @@ export const CategoriesTab = () => {
                 onChangeHandler={field.onChange}
                 onQueryChange={setQuery}
                 isLoading={isFetching}
+                disabled
               />
             </FormControl>
             <FormMessage />
