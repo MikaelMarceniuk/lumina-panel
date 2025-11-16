@@ -9,25 +9,13 @@ import {
 } from '@/components/ui/form'
 import { MultiSelect } from '@/components/multi-select'
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { api } from '@/lib/axios'
-import type { Category } from '@/types/category.type'
 import { CategoriesTabSkeleton } from './categories.tab.skeleton'
+import { useCategories } from '@/hooks/use-categories.hook'
 
 export const CategoriesTab = () => {
   const { form, isLoading } = useProductDetails()
   const [query, setQuery] = useState('')
-
-  // TODO Create a useCategoryHook
-  const { data, isFetching } = useQuery({
-    queryKey: ['/category', query],
-    queryFn: async () =>
-      (
-        await api.get<Category[]>('/category', {
-          params: { q: query != '' ? query : undefined },
-        })
-      ).data,
-  })
+  const { categories, isFetching } = useCategories({ query })
 
   if (isLoading) return <CategoriesTabSkeleton />
 
@@ -40,7 +28,7 @@ export const CategoriesTab = () => {
           <FormItem>
             <FormControl>
               <MultiSelect
-                data={data || []}
+                data={categories}
                 placeholder="Selecionar categorias..."
                 itemLabel={{
                   singular: 'categoria',

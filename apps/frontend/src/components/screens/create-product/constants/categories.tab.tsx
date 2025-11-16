@@ -1,9 +1,6 @@
 import { TabWrapper } from '@/components/layout/tab-wrapper'
 import { CreateProductTabs } from './tabs'
 import { useState } from 'react'
-import type { Category } from '@/types/category.type'
-import { useQuery } from '@tanstack/react-query'
-import { api } from '@/lib/axios'
 import { MultiSelect } from '@/components/multi-select'
 import {
   FormControl,
@@ -12,21 +9,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { useCreateProduct } from '../provider/create-product.provider'
+import { useCategories } from '@/hooks/use-categories.hook'
 
 export const CategoriesTab = () => {
   const { form } = useCreateProduct()
   const [query, setQuery] = useState('')
-
-  // TODO Create a useCategoryHook
-  const { data, isFetching } = useQuery({
-    queryKey: ['/category', query],
-    queryFn: async () =>
-      (
-        await api.get<Category[]>('/category', {
-          params: { q: query != '' ? query : undefined },
-        })
-      ).data,
-  })
+  const { categories, isFetching } = useCategories({ query })
 
   return (
     <TabWrapper title={CreateProductTabs.categories.title}>
@@ -37,7 +25,7 @@ export const CategoriesTab = () => {
           <FormItem>
             <FormControl>
               <MultiSelect
-                data={data || []}
+                data={categories}
                 placeholder="Selecionar categorias..."
                 itemLabel={{
                   singular: 'categoria',
