@@ -15,7 +15,8 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "mhutchie.git-graph",
-        "linjun.dbeaver-support"
+        "linjun.dbeaver-support",
+        "gruntfuggly.todo-tree"
       ]
     }
   }
