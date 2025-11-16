@@ -12,7 +12,7 @@ import {
 import { Type } from 'class-transformer';
 import { CategoryItemDTO } from 'src/utils/category-item.dto';
 
-export class CreateProductDTO {
+export class UpdateProductDTO {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)

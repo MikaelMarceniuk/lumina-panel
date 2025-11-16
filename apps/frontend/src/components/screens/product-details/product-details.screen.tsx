@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import { ProductDetailsProvider } from './provider/product-details.provider'
 import { ProductDetailsSidebar } from './components/product-details.sidebar'
 import { ProductDetailsContent } from './components/product-details.content'
+import { ProductDetailsHeader } from './components/product-details.header'
 
 export const ProductDetailsScreen = () => {
   const navigate = useNavigate()
@@ -17,11 +18,9 @@ export const ProductDetailsScreen = () => {
 
   return (
     <ScreenWrapper>
-      <div className="flex justify-between">
-        <h1 className="text-4xl">Detalhes do produto</h1>
-      </div>
-
       <ProductDetailsProvider id={id}>
+        <ProductDetailsHeader />
+
         <div className="grid h-full min-h-screen grid-cols-[250px_1fr] gap-6">
           <ProductDetailsSidebar />
           <ProductDetailsContent />

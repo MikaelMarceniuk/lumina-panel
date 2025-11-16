@@ -1,6 +1,6 @@
 import { api } from '@/lib/axios'
 import type { ProductDetails } from '@/types/product-details.type'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import type { ProductDetailsTabsKeys } from '../constants/product-details.tabs.constants'
 import { Form } from '@/components/ui/form'
@@ -12,7 +12,9 @@ import {
   productSchema,
   type ProductSchema,
 } from '../schemas/product-details.schema'
-import { formatPriceFromCents } from '@/lib/formatters.utils'
+import { formatPriceFromCents, toCents } from '@/lib/formatters.utils'
+import { ProductDetailsAlert } from '../components/product-details-alert.dialog'
+import { toast } from 'sonner'
 
 type ProductDetailsContext = {
   product: ProductDetails | undefined
@@ -21,6 +23,9 @@ type ProductDetailsContext = {
   setCurrentTab: (key: ProductDetailsTabsKeys) => void
   form: UseFormReturn<ProductSchema>
   isSubmitting: boolean
+  isEditing: boolean
+  toggleEditing: (needUserConfirmation: boolean) => void
+  resetForm: () => void
 }
 
 const ProductDetailsContext = createContext({} as ProductDetailsContext)
@@ -34,6 +39,8 @@ export const ProductDetailsProvider: React.FC<ProductDetailsProviderProps> = ({
   id,
   children,
 }) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const [isAlertOpen, setAlertOpen] = useState(false)
   const [currentTab, setCurrentTab] =
     useState<ProductDetailsTabsKeys>('basicInformations')
   const form = useForm({
@@ -41,15 +48,46 @@ export const ProductDetailsProvider: React.FC<ProductDetailsProviderProps> = ({
     defaultValues: formDefaultValues,
   })
 
-  const { data, isFetching } = useQuery({
+  const { mutateAsync } = useMutation({
+    mutationFn: async (data: ProductSchema) => {
+      const apiResult = await api.patch<ProductDetails>(`/product/${id}`, {
+        name: data.basicInfo.name,
+        sku: data.basicInfo.sku,
+        priceInCents: toCents(data.priceStock.priceInCents),
+        stock: data.priceStock.stock,
+        isActive: data.priceStock.isActive,
+        categories: data.categories.categories,
+      })
+
+      return apiResult.data
+    },
+  })
+
+  const { data, refetch, isFetching } = useQuery({
     queryKey: ['/product-details', id],
     queryFn: async () => (await api.get<ProductDetails>(`/product/${id}`)).data,
     enabled: !!id,
   })
 
-  const handleSubmit = form.handleSubmit((data) =>
-    console.log('ProductDetailsProvider.submit: ', data)
+  const handleSubmit = form.handleSubmit(
+    async (data) =>
+      await mutateAsync(data, {
+        onSuccess: () => {
+          toast.success('Produto atualizado com sucesso!')
+          setIsEditing(false)
+          refetch()
+        },
+      })
   )
+
+  const toggleEditing = (needUserConfirmation: boolean = true) => {
+    if (needUserConfirmation && isEditing) {
+      setAlertOpen(true)
+      return
+    }
+
+    setIsEditing(!isEditing)
+  }
 
   const resetForm = () => {
     if (data) {
@@ -83,11 +121,18 @@ export const ProductDetailsProvider: React.FC<ProductDetailsProviderProps> = ({
         setCurrentTab,
         form,
         isSubmitting: form.formState.isSubmitting,
+        isEditing,
+        toggleEditing,
+        resetForm,
       }}
     >
       <Form {...form}>
         <form onSubmit={handleSubmit}>{children}</form>
       </Form>
+      <ProductDetailsAlert
+        isOpen={isAlertOpen}
+        handleOnOpenChange={setAlertOpen}
+      />
     </ProductDetailsContext.Provider>
   )
 }

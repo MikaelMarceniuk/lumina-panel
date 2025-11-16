@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input'
 import { BasicInformationsTabSkeleton } from './basic-informations.tab.skeleton'
 
 export const BasicInformationsTab = () => {
-  const { form, isLoading } = useProductDetails()
+  const { form, isLoading, isEditing } = useProductDetails()
 
   if (isLoading) return <BasicInformationsTabSkeleton />
 
@@ -31,7 +31,7 @@ export const BasicInformationsTab = () => {
               <Input
                 type="text"
                 placeholder="Ex: Camiseta Básica"
-                disabled
+                disabled={!isEditing}
                 {...field}
               />
             </FormControl>
@@ -47,7 +47,12 @@ export const BasicInformationsTab = () => {
           <FormItem>
             <FormLabel>SKU*</FormLabel>
             <FormControl>
-              <Input type="text" placeholder="SKU12345" disabled {...field} />
+              <Input
+                type="text"
+                placeholder="SKU12345"
+                disabled={!isEditing}
+                {...field}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>

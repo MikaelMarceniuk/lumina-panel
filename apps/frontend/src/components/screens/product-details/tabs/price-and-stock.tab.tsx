@@ -20,7 +20,7 @@ import {
 import { PriceAndStockTabSkeleton } from './price-and-stock.tab.skeleton'
 
 export const PriceAndStockTab = () => {
-  const { form, isLoading } = useProductDetails()
+  const { form, isLoading, isEditing } = useProductDetails()
 
   if (isLoading) return <PriceAndStockTabSkeleton />
 
@@ -36,7 +36,7 @@ export const PriceAndStockTab = () => {
           <FormItem>
             <FormLabel>Preço</FormLabel>
             <FormControl>
-              <MaskedInput mask="money" disabled {...field} />
+              <MaskedInput mask="money" disabled={!isEditing} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -57,7 +57,7 @@ export const PriceAndStockTab = () => {
                   const val = e.target.valueAsNumber
                   field.onChange(isNaN(val) ? '' : val)
                 }}
-                disabled
+                disabled={!isEditing}
               />
             </FormControl>
             <FormMessage />
@@ -72,7 +72,11 @@ export const PriceAndStockTab = () => {
           <FormItem>
             <FormLabel>Ativo</FormLabel>
             <FormControl>
-              <Select onValueChange={field.onChange} disabled {...field}>
+              <Select
+                onValueChange={field.onChange}
+                disabled={!isEditing}
+                {...field}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>

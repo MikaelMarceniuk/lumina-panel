@@ -13,7 +13,7 @@ import { CategoriesTabSkeleton } from './categories.tab.skeleton'
 import { useCategories } from '@/hooks/use-categories.hook'
 
 export const CategoriesTab = () => {
-  const { form, isLoading } = useProductDetails()
+  const { form, isLoading, isEditing } = useProductDetails()
   const [query, setQuery] = useState('')
   const { categories, isFetching } = useCategories({ query })
 
@@ -38,7 +38,7 @@ export const CategoriesTab = () => {
                 onChangeHandler={field.onChange}
                 onQueryChange={setQuery}
                 isLoading={isFetching}
-                disabled
+                disabled={!isEditing}
               />
             </FormControl>
             <FormMessage />

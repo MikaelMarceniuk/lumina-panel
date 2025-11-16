@@ -12,6 +12,7 @@ import { ProductPresenter } from './presenter/product.presenter';
 import { PrismaClientKnownRequestError } from 'generated/prisma/internal/prismaNamespace';
 import { Prisma } from 'generated/prisma/client';
 import { ProductDetailsPresenter } from './presenter/product-details.presenter';
+import { UpdateProductDTO } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -120,5 +121,53 @@ export class ProductService {
       }
       throw error;
     }
+  }
+
+  async update(id: string, data: UpdateProductDTO) {
+    const slug = slugify(data.name);
+
+    const existingProduct = await this.prisma.product.findUnique({
+      where: { id },
+      include: { categories: true },
+    });
+
+    if (!existingProduct) {
+      throw new NotFoundException('Produto não encontrado.');
+    }
+
+    // Confere duplicidade ignorando o próprio produto
+    const conflictingProduct = await this.prisma.product.findFirst({
+      where: {
+        OR: [{ slug }, { sku: data.sku }],
+        NOT: { id },
+      },
+    });
+
+    if (conflictingProduct) {
+      throw new BadRequestException(
+        'Já existe outro produto com o mesmo slug ou SKU.',
+      );
+    }
+
+    const updatedProduct = await this.prisma.product.update({
+      where: { id },
+      data: {
+        name: data.name,
+        slug,
+        sku: data.sku,
+        description: data.description,
+        priceInCents: data.priceInCents,
+        stock: data.stock ?? 0,
+        isActive: data.isActive ?? true,
+        categories: data.categories
+          ? {
+              set: data.categories.map((c) => ({ id: c.id })),
+            }
+          : undefined,
+      },
+      include: { categories: true },
+    });
+
+    return new ProductPresenter(updatedProduct);
   }
 }
