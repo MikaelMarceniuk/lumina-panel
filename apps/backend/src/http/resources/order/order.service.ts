@@ -8,9 +8,21 @@ import { Prisma } from 'generated/prisma/browser';
 export class OrderService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getMany({ q, page = 1, limit = 10 }: GetManyQuery) {
+  async getMany({
+    q,
+    type,
+    paymentMethod,
+    status,
+    page = 1,
+    limit = 10,
+  }: GetManyQuery) {
     const where: Prisma.OrderWhereInput = {
       ...(q && { orderCode: { contains: q, mode: 'insensitive' } }),
+      ...(type?.length ? { type: { in: type } } : {}),
+      ...(paymentMethod?.length
+        ? { paymentMethod: { in: paymentMethod } }
+        : {}),
+      ...(status?.length ? { status: { in: status } } : {}),
     };
 
     const [orders, totalCount] = await Promise.all([
@@ -20,7 +32,7 @@ export class OrderService {
         orderBy: { createdAt: 'desc' },
         where,
       }),
-      this.prisma.order.count({}),
+      this.prisma.order.count({ where }),
     ]);
 
     return new OrderPaginated({ orders, totalCount, page, limit });

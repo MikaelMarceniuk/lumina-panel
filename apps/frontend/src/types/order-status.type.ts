@@ -7,7 +7,7 @@ export type OrderStatus =
   | 'CANCELED'
   | 'REFUNDED'
 
-const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
+export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   PENDING: 'Pendente',
   PROCESSING: 'Processando',
   PREPARING_SHIPMENT: 'Preparando envio',

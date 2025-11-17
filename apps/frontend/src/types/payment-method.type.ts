@@ -1,6 +1,6 @@
 export type PaymentMethod = 'CREDIT_CARD' | 'PIX' | 'BOLETO' | 'CASH'
 
-const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
+export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
   CREDIT_CARD: 'Cartão de crédito',
   PIX: 'Pix',
   BOLETO: 'Boleto',

@@ -1,4 +1,4 @@
-import { getOrderAction } from '@/actions/get-oders.action'
+import { getOrderAction } from '@/actions/get-orders.action'
 import { ScreenWrapper } from '@/components/layout/screen-wrapper.layout'
 import { AppTable } from '@/components/table/app-table'
 import { AppPagination } from '@/components/table/app-table-pagination'
@@ -23,13 +23,16 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { EllipsisIcon, Eye, Plus } from 'lucide-react'
 import { useNavigate } from 'react-router'
+import { OrderFilters } from './components/order.filters'
+import { useState } from 'react'
 
 export const OrderScreen = () => {
   const navigate = useNavigate()
   const { page, limit, handlePageChange } = usePagination()
+  const [filters, setFilters] = useState<OrderFilters>({})
   const { data, isFetching } = useQuery({
-    queryKey: ['/order', page, limit],
-    queryFn: () => getOrderAction({ page, limit }),
+    queryKey: ['/order', filters, page, limit],
+    queryFn: () => getOrderAction({ ...filters, page, limit }),
   })
 
   const columns: ColumnDef<Order>[] = [
@@ -88,6 +91,8 @@ export const OrderScreen = () => {
           Novo pedido
         </Button>
       </div>
+
+      <OrderFilters onChangeHandler={setFilters} />
 
       <AppTable
         columns={columns}
