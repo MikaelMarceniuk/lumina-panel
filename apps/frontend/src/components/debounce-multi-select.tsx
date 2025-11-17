@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { Button } from './ui/button'
 import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
@@ -12,11 +12,10 @@ import {
 } from './ui/command'
 import { Badge } from './ui/badge'
 import { useDebounce } from '@/hooks/use-debounce.hook'
+import { Spinner } from './ui/spinner'
 import { cn } from '@/lib/utils'
 
-export type MultiSelectValue<T extends string> = T[]
-
-export type MultiSelectData = { id: string; name: string }
+type MultiSelectData = { id: string; name: string }
 
 type MultiSelectProps = {
   data: MultiSelectData[]
@@ -27,15 +26,19 @@ type MultiSelectProps = {
   }
   value: MultiSelectData[]
   onChangeHandler: (value: MultiSelectData[]) => void
+  onQueryChange: (q: string) => void
+  isLoading: boolean
   disabled?: boolean
 }
 
-export const MultiSelect: React.FC<MultiSelectProps> = ({
+export const DebounceMultiSelect: React.FC<MultiSelectProps> = ({
   data,
   placeholder,
   itemLabel,
   value,
   onChangeHandler,
+  onQueryChange,
+  isLoading,
   disabled,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -46,6 +49,15 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   const label = remaining === 1 ? itemLabel.singular : itemLabel.plural
 
   const renderContent = (): React.ReactNode => {
+    if (isLoading) {
+      return (
+        <CommandEmpty className="flex flex-row items-center justify-center gap-2 py-4">
+          <Spinner />
+          <span>Buscando...</span>
+        </CommandEmpty>
+      )
+    }
+
     // quando não há query e não há resultados
     if (!debounceQuery && data.length === 0) {
       return (
@@ -109,6 +121,10 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     // fallback explícito (evita retornar undefined)
     return null
   }
+
+  useEffect(() => {
+    onQueryChange(debounceQuery)
+  }, [debounceQuery])
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>

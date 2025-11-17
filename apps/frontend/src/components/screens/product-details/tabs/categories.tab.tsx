@@ -7,7 +7,7 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form'
-import { MultiSelect } from '@/components/multi-select'
+import { DebounceMultiSelect } from '@/components/debounce-multi-select'
 import { useState } from 'react'
 import { CategoriesTabSkeleton } from './categories.tab.skeleton'
 import { useCategories } from '@/hooks/use-categories.hook'
@@ -27,7 +27,7 @@ export const CategoriesTab = () => {
         render={({ field }) => (
           <FormItem>
             <FormControl>
-              <MultiSelect
+              <DebounceMultiSelect
                 data={categories}
                 placeholder="Selecionar categorias..."
                 itemLabel={{

@@ -1,7 +1,7 @@
 import { TabWrapper } from '@/components/layout/tab-wrapper'
 import { CreateProductTabs } from './tabs'
 import { useState } from 'react'
-import { MultiSelect } from '@/components/multi-select'
+import { DebounceMultiSelect } from '@/components/debounce-multi-select'
 import {
   FormControl,
   FormField,
@@ -24,7 +24,7 @@ export const CategoriesTab = () => {
         render={({ field }) => (
           <FormItem>
             <FormControl>
-              <MultiSelect
+              <DebounceMultiSelect
                 data={categories}
                 placeholder="Selecionar categorias..."
                 itemLabel={{
