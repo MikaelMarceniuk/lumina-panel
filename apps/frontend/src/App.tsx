@@ -12,6 +12,7 @@ import { CustomerDetailsScreen } from './components/screens/customer-details/cus
 import { CreateProductScreen } from './components/screens/create-product/create-product.screen'
 import { ProductDetailsScreen } from './components/screens/product-details/product-details.screen'
 import { OrderScreen } from './components/screens/order/order.screen'
+import { OrderDetailsScreen } from './components/screens/order-details/order-details.screen'
 
 const App = () => {
   return (
@@ -43,6 +44,10 @@ const App = () => {
                 />
 
                 <Route path="/dashboard/order" element={<OrderScreen />} />
+                <Route
+                  path="/dashboard/order/:id"
+                  element={<OrderDetailsScreen />}
+                />
               </Route>
             </Routes>
             <Toaster richColors />

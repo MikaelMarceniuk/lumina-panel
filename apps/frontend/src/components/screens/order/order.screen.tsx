@@ -2,8 +2,7 @@ import { getOrderAction } from '@/actions/get-orders.action'
 import { ScreenWrapper } from '@/components/layout/screen-wrapper.layout'
 import { AppTable } from '@/components/table/app-table'
 import { AppPagination } from '@/components/table/app-table-pagination'
-import { Badge, type BadgeVariants } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +20,7 @@ import {
   type PaymentMethod,
 } from '@/types/payment-method.type'
 import { useQuery } from '@tanstack/react-query'
-import { EllipsisIcon, Eye, Plus } from 'lucide-react'
+import { EllipsisIcon, Eye } from 'lucide-react'
 import { useNavigate } from 'react-router'
 import { OrderFilters } from './components/order.filters'
 import { useState } from 'react'
@@ -30,6 +29,7 @@ export const OrderScreen = () => {
   const navigate = useNavigate()
   const { page, limit, handlePageChange } = usePagination()
   const [filters, setFilters] = useState<OrderFilters>({})
+
   const { data, isFetching } = useQuery({
     queryKey: ['/order', filters, page, limit],
     queryFn: () => getOrderAction({ ...filters, page, limit }),
@@ -86,10 +86,6 @@ export const OrderScreen = () => {
     <ScreenWrapper>
       <div className="flex justify-between">
         <h1 className="text-4xl">Pedidos</h1>
-        <Button type="button">
-          <Plus />
-          Novo pedido
-        </Button>
       </div>
 
       <OrderFilters onChangeHandler={setFilters} />
