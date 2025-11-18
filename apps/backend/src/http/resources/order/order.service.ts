@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/providers/prisma/prisma.service';
 import { GetManyQuery } from './query/get-many.query';
 import { OrderPaginated } from './presenter/order-paginated.presenter';
 import { Prisma } from 'generated/prisma/browser';
+import { OrderDetailsPresenter } from './presenter/order-details.presenter';
 
 @Injectable()
 export class OrderService {
@@ -36,5 +37,27 @@ export class OrderService {
     ]);
 
     return new OrderPaginated({ orders, totalCount, page, limit });
+  }
+
+  async getOne(id: string) {
+    const order = await this.prisma.order.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+        customer: true,
+      },
+    });
+
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    return new OrderDetailsPresenter(order);
   }
 }
