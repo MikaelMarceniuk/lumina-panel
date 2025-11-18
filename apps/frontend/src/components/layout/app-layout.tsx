@@ -13,6 +13,7 @@ import {
 import { AppSidebar } from './app-sidebar'
 import { Outlet } from 'react-router'
 import { ThemeToggle } from '../theme-toggle'
+import { AppBreadcrumb } from './app-breadcrumb'
 
 export const AppLayout = () => {
   return (
@@ -27,13 +28,7 @@ export const AppLayout = () => {
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4"
             />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Dashboard</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+            <AppBreadcrumb />
           </div>
         </header>
         <div className="p-4">
