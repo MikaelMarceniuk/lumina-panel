@@ -77,8 +77,8 @@ export const NavUser = () => {
               onClick={signOut}
               className="cursor-pointer text-red-500 transition-all duration-200 hover:bg-red-500 hover:text-white focus:bg-red-500 focus:text-white"
             >
-              <LogOut className="mr-2 h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
-              Log out
+              <LogOut className="mr-2 h-4 w-4 text-inherit transition-transform duration-200 group-hover:scale-110" />
+              Deslogar
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
