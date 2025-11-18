@@ -36,7 +36,7 @@ const itemsSchema = z.object({
         name: z.string(),
         slug: z.string(),
         sku: z.string(),
-        description: z.string(),
+        description: z.string().nullable(),
         priceInCents: z.number(),
         stock: z.number(),
         isActive: z.boolean(),

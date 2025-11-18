@@ -41,7 +41,7 @@ export async function ordersSeed(ctx: PrismaClient) {
     }
 
     // Itens do pedido
-    const itemsCount = faker.number.int({ min: 1, max: 4 });
+    const itemsCount = faker.number.int({ min: 1, max: 20 });
     const selectedProducts = faker.helpers.arrayElements(products, itemsCount);
 
     const items = selectedProducts.map((product) => {

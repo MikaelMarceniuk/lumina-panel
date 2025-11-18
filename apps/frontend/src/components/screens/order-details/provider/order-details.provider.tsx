@@ -58,6 +58,8 @@ export const OrderDetailsProvider: React.FC<OrderDetailsProviderProps> = ({
       form.setValue('price.subtotalInCents', data.subtotalInCents)
       form.setValue('price.discountInCents', data.discountInCents)
       form.setValue('price.totalInCents', data.totalInCents)
+
+      form.setValue('items.items', data.items)
     }
   }, [data])
 

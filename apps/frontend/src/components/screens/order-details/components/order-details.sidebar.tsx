@@ -14,6 +14,7 @@ export const OrderDetailsSidebar = () => {
           variant="ghost"
           className="w-full cursor-pointer justify-between"
           onClick={() => setCurrentTab(key as keyof typeof OrderDetailsTabs)}
+          type="button"
         >
           <span className="flex items-center gap-2">
             <Icon className="h-4 w-4" />
