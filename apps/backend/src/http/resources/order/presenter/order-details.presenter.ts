@@ -32,8 +32,8 @@ export class OrderDetailsPresenter {
   state: string | undefined;
   zipCode: string | undefined;
   notes: string | undefined;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 
   items: OrderItemPresenter[];
   customer: CustomerPresenter | undefined;
@@ -53,8 +53,8 @@ export class OrderDetailsPresenter {
     this.state = order.state || undefined;
     this.zipCode = order.zipCode || undefined;
     this.notes = order.notes || undefined;
-    this.createdAt = order.createdAt.toISOString();
-    this.updatedAt = order.updatedAt.toISOString();
+    this.createdAt = order.createdAt;
+    this.updatedAt = order.updatedAt;
 
     this.items = items.map((i) => new OrderItemPresenter(i));
     this.customer = customer ? new CustomerPresenter(customer) : undefined;

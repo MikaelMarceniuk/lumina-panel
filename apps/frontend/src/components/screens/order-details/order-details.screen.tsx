@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import { OrderDetailsProvider } from './provider/order-details.provider'
 import { OrderDetailsSidebar } from './components/order-details.sidebar'
 import { ScreenWrapper } from '@/components/layout/screen-wrapper.layout'
+import { OrderDetailsContent } from './components/order-details.content'
 
 export const OrderDetailsScreen = () => {
   const navigate = useNavigate()
@@ -23,7 +24,7 @@ export const OrderDetailsScreen = () => {
       <OrderDetailsProvider id={id}>
         <div className="grid h-full min-h-screen grid-cols-[250px_1fr] gap-6">
           <OrderDetailsSidebar />
-          {/* <OrderDetailsContent /> */}
+          <OrderDetailsContent />
         </div>
       </OrderDetailsProvider>
     </ScreenWrapper>
