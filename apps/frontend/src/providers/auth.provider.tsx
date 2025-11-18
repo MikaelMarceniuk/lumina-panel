@@ -1,8 +1,10 @@
+import { getMeAction } from '@/actions/get-me.action'
 import { api } from '@/lib/axios'
+import { FormatedApiError } from '@/types/formated-api-error'
 import type { User } from '@/types/user.type'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import React, { createContext, useContext, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 
 type AuthContext = {
@@ -20,6 +22,7 @@ const AuthContext = createContext<AuthContext>({} as AuthContext)
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [user, setUser] = useState<User | null>(null)
 
   const isAuthenticated = !!user
@@ -27,17 +30,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { refetch } = useQuery({
     queryKey: ['/me'],
     queryFn: async () => {
-      const apiResponse = await api.get<User>('/user/me')
+      try {
+        let user = await getMeAction()
 
-      if (apiResponse.status !== 200) {
-        toast.error('Erro ao buscar /user/me')
-        navigate('/sign-in', { replace: true })
+        if (
+          user instanceof FormatedApiError &&
+          user.statusCode === 401 &&
+          user.message === 'Token de acesso ausente' &&
+          location.pathname.startsWith('/dashboard')
+        ) {
+          try {
+            await api.post('/auth/refresh')
+            user = await getMeAction()
+          } catch {
+            toast.error('Sessão expirada. Faça login novamente.')
+            navigate('/sign-in', { replace: true })
+            throw new Error('Falha ao atualizar token')
+          }
+        }
+
+        setUser(user as User)
+        return user as User
+      } catch (error) {
+        throw error
       }
-
-      setUser(apiResponse.data)
-      return apiResponse.data
     },
-    retry: 1,
+    retry: 0,
   })
 
   const { mutateAsync: signOutMutation } = useMutation({
