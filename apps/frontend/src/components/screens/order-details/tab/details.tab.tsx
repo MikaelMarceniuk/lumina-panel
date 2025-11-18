@@ -179,7 +179,7 @@ export const DetailsTab = () => {
             name="customer.companyName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Nome da empresa</FormLabel>
                 <FormControl>
                   <Input {...field} disabled />
                 </FormControl>
