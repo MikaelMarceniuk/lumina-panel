@@ -10,9 +10,9 @@
     "apps/*"
   ],
   "scripts": {
-    "start:dev:backend": "npm run start:dev --workspace apps/backend",
-    "start:dev:frontend": "npm run start:dev --workspace apps/frontend",
-    "start:dev": "concurrently \"npm run start:dev:backend\" \"npm run start:dev:frontend\""
+    "start:dev:server": "npm run start:dev --workspace apps/server",
+    "start:dev:web": "npm run start:dev --workspace apps/web",
+    "start:dev": "concurrently \"npm run start:dev:server\" \"npm run start:dev:web\""
   },
   "devDependencies": {
     "concurrently": "^9.0.0"

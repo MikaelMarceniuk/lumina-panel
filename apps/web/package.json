@@ -1,5 +1,5 @@
 {
-  "name": "@lumina-panel/frontend",
+  "name": "@lumina-panel/web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
