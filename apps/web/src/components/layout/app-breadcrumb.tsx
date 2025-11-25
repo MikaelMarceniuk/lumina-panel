@@ -42,8 +42,8 @@ const formatBreadcrumb = (value: string) => {
   switch (value) {
     case 'dashboard':
       return 'Dashboard'
-    case 'customer':
-      return 'Clientes'
+    case 'store':
+      return 'Lojas'
     case 'product':
       return 'Produtos'
     case 'order':

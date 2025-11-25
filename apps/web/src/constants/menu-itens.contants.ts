@@ -2,7 +2,7 @@ import {
   ClipboardList,
   Package,
   SquareTerminal,
-  Users,
+  Store,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -23,9 +23,9 @@ export const menuItems: MenuItem[] = [
     icon: SquareTerminal,
   },
   {
-    title: 'Clientes',
-    url: '/dashboard/customer',
-    icon: Users,
+    title: 'Lojas',
+    url: '/dashboard/store',
+    icon: Store,
   },
   {
     title: 'Produtos',

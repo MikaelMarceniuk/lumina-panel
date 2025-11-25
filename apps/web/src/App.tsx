@@ -5,14 +5,13 @@ import { QueryClientProvider } from './providers/query-client.provider'
 import { Toaster } from './components/ui/sonner'
 import { AppLayout } from './components/layout/app-layout'
 import { AuthProvider } from './providers/auth.provider'
-import { CustomerScreen } from './components/screens/customer/customer.screen'
 import { ProductScreen } from './components/screens/product/product.screen'
 import { ThemeProvider } from './providers/theme.provider'
-import { CustomerDetailsScreen } from './components/screens/customer-details/customer-details.screen'
 import { CreateProductScreen } from './components/screens/create-product/create-product.screen'
 import { ProductDetailsScreen } from './components/screens/product-details/product-details.screen'
 import { OrderScreen } from './components/screens/order/order.screen'
 import { OrderDetailsScreen } from './components/screens/order-details/order-details.screen'
+import { StoreScreen } from './components/screens/store/store.screen'
 
 const App = () => {
   return (
@@ -24,14 +23,8 @@ const App = () => {
               <Route path="/sign-in" element={<SignInScreen />} />
               <Route element={<AppLayout />}>
                 <Route path="/dashboard" element={<DashboardScreen />} />
-                <Route
-                  path="/dashboard/customer"
-                  element={<CustomerScreen />}
-                />
-                <Route
-                  path="/dashboard/customer/:id"
-                  element={<CustomerDetailsScreen />}
-                />
+
+                <Route path="/dashboard/store" element={<StoreScreen />} />
 
                 <Route path="/dashboard/product" element={<ProductScreen />} />
                 <Route
