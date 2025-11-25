@@ -8,10 +8,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { envSchema } from './config/env.config';
 import { UserModule } from './http/resources/user/user.module';
 import { SessionModule } from './providers/session/session.module';
-import { CustomerModule } from './http/resources/customer/customer.module';
-import { ProductModule } from './http/resources/product/product.module';
-import { CategoryModule } from './http/resources/category/category.module';
-import { OrderModule } from './http/resources/order/product.module';
 
 @Module({
   imports: [
@@ -41,10 +37,6 @@ import { OrderModule } from './http/resources/order/product.module';
     SessionModule,
     AuthModule,
     UserModule,
-    CustomerModule,
-    ProductModule,
-    CategoryModule,
-    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
