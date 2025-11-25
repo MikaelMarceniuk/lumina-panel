@@ -46,6 +46,7 @@ export const StoreProvider: React.FC<withChildren> = ({ children }) => {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useStore = () => {
   const ctx = useContext(StoreContext)
   if (!ctx) {
