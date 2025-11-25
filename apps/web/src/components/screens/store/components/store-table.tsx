@@ -5,9 +5,11 @@ import type { Store } from '@/types/store.type'
 import { Ellipsis } from 'lucide-react'
 import { useStore } from '../providers/store.provider'
 import { StoreTableEmpty } from './store-table.empty'
+import { formatPhone } from '@/lib/formatters.utils'
 
 export const StoreTable = () => {
   const { stores, pagination, isFetching, handlePageChange } = useStore()
+
   const columns: ColumnDef<Store>[] = [
     {
       key: 'name',
@@ -16,6 +18,7 @@ export const StoreTable = () => {
     {
       key: 'manager',
       title: 'Gerente',
+      render: (val) => (!val ? '------' : val),
     },
     {
       key: 'contactEmail',
@@ -25,7 +28,7 @@ export const StoreTable = () => {
     {
       key: 'phone',
       title: 'Telefone',
-      render: (val) => (!val ? '------' : val),
+      render: (val) => (!val ? '------' : formatPhone(val)),
     },
     {
       key: 'id',

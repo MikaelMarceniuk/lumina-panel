@@ -9,20 +9,31 @@ import { StorePaginated } from './presenter/store-paginated.presenter';
 import { StoreDetailsPresenter } from './presenter/store-details.presenter';
 import { CreateStoreDTO } from './dto/create-store.dto';
 import { UpdateStoreDTO } from './dto/update-store.dto';
+import { Prisma } from 'generated/prisma/client';
 
 @Injectable()
 export class StoreService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAll({ limit = 10, page = 1 }: GetAllQuery) {
+  async getAll({ limit = 10, page = 1, q }: GetAllQuery) {
     const take = limit;
     const skip = (page - 1) * limit;
 
+    const where: Prisma.StoreWhereInput = {};
+    if (q && q.trim() !== '') {
+      where.OR = [
+        { name: { contains: q, mode: 'insensitive' } },
+        { manager: { contains: q, mode: 'insensitive' } },
+      ];
+    }
+
     const [totalCount, stores] = await Promise.all([
-      this.prisma.store.count(),
+      this.prisma.store.count({ where }),
       this.prisma.store.findMany({
         skip,
         take,
+        where,
+        orderBy: { createdAt: 'desc' },
       }),
     ]);
 

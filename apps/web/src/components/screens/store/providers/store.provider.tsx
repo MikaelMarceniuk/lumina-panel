@@ -7,11 +7,14 @@ import type { withChildren } from '@/types/with-children.type'
 import { useQuery } from '@tanstack/react-query'
 import React, { createContext, useContext, useState } from 'react'
 import { CreateStoreDialog } from '../components/create-store.dialog'
+import { useDebounce } from '@/hooks/use-debounce.hook'
 
 type StoreContext = {
   stores: Store[]
   pagination: PaginationMeta | undefined
   isFetching: boolean
+  q: string
+  handleQueryChange: (value: string) => void
   handlePageChange: (newPage: number, totalPages?: number | undefined) => void
   openCreateDialog: () => void
 }
@@ -21,12 +24,24 @@ const StoreContext = createContext({} as StoreContext)
 export const StoreProvider: React.FC<withChildren> = ({ children }) => {
   const { limit, page, handlePageChange } = usePagination()
   const [isDialogOpen, setDialogOpen] = useState(false)
+  const [q, setQuery] = useState('')
+  const debouncedQuery = useDebounce(q, 400)
+
   const { data, isFetching } = useQuery({
-    queryKey: ['/stores', limit, page],
+    queryKey: ['/stores', limit, page, debouncedQuery],
     queryFn: async () =>
-      (await api.get<StorePaginated>('/store', { params: { limit, page } }))
-        .data,
+      (
+        await api.get<StorePaginated>('/store', {
+          params: {
+            limit,
+            page,
+            q: debouncedQuery == '' ? undefined : debouncedQuery,
+          },
+        })
+      ).data,
   })
+
+  const handleQueryChange = (val: string) => setQuery(val)
 
   const openCreateDialog = () => setDialogOpen(true)
 
@@ -36,6 +51,8 @@ export const StoreProvider: React.FC<withChildren> = ({ children }) => {
         stores: data?.stores || [],
         pagination: data?.meta,
         isFetching,
+        q,
+        handleQueryChange,
         handlePageChange,
         openCreateDialog,
       }}
