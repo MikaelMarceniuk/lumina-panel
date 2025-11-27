@@ -1,9 +1,17 @@
 import { Button } from '@/components/ui/button'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, PencilLine, Save, X } from 'lucide-react'
 import { useStoreDetails } from '../provider/store-details.provider'
 
 export const StoreDetailsSidebar = () => {
-  const { tabList, currentTabKey, handleTabChange } = useStoreDetails()
+  const {
+    mode,
+    handleChangeMode,
+    tabList,
+    currentTabKey,
+    handleTabChange,
+    isSubmitting,
+    openAlert,
+  } = useStoreDetails()
 
   return (
     <div className="flex flex-col space-y-1 pr-4">
@@ -24,6 +32,41 @@ export const StoreDetailsSidebar = () => {
           )}
         </Button>
       ))}
+
+      <div className="mt-4 w-full space-y-2">
+        {mode == 'read' && (
+          <Button
+            type="button"
+            className="w-full"
+            variant={'outline'}
+            onClick={() => handleChangeMode('update')}
+          >
+            <PencilLine /> Editar
+          </Button>
+        )}
+
+        {mode == 'update' && (
+          <>
+            <Button type="submit" className="w-full" isLoading={isSubmitting}>
+              {isSubmitting ? (
+                'Salvando...'
+              ) : (
+                <>
+                  <Save /> Salvar
+                </>
+              )}
+            </Button>
+            <Button
+              type="button"
+              className="w-full"
+              variant={'outline'}
+              onClick={openAlert}
+            >
+              <X /> Cancelar
+            </Button>
+          </>
+        )}
+      </div>
     </div>
   )
 }

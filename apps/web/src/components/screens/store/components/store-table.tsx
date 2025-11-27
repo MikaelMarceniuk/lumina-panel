@@ -52,7 +52,7 @@ export const StoreTable = () => {
             <DropdownMenuItem
               onClick={() => navigate(`/dashboard/store/${val}`)}
             >
-              <Eye className="text-white" /> Visualizar
+              <Eye className="text-black dark:text-white" /> Visualizar
             </DropdownMenuItem>
             <DropdownMenuItem variant="destructive">
               <Trash2Icon /> Excluir
