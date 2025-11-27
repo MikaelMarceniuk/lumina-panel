@@ -9,6 +9,6 @@ export type StoreDetails = {
   city: string | null
   state: string | null
   zipCode: string | null
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date
 }
