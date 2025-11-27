@@ -11,14 +11,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
 export const StoreTable = () => {
   const navigate = useNavigate()
-  const { stores, pagination, isFetching, handlePageChange } = useStore()
+  const { stores, pagination, isFetching, handlePageChange, openDeleteAlert } =
+    useStore()
 
   const columns: ColumnDef<Store>[] = [
     {
@@ -54,7 +53,10 @@ export const StoreTable = () => {
             >
               <Eye className="text-black dark:text-white" /> Visualizar
             </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive">
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => openDeleteAlert(val!)}
+            >
               <Trash2Icon /> Excluir
             </DropdownMenuItem>
           </DropdownMenuContent>
