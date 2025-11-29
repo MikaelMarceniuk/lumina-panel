@@ -56,3 +56,25 @@ model Store {
 
   @@map("stores")
 }
+
+model Deliverer {
+  id          String       @id @default(cuid())
+  name        String
+  phone       String?
+  vehicleType VehicleType? @map("vehicle_type")
+  plateNumber String?      @map("plate_number")
+  isActive    Boolean
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("deliverers")
+}
+
+enum VehicleType {
+  MOTORCYCLE
+  CAR
+  BICYCLE
+  VAN
+  SMALL_TRUCK
+}
