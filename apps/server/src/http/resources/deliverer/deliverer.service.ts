@@ -3,7 +3,7 @@ import { CreateDelivererDto } from './dto/create-deliverer.dto';
 import { UpdateDelivererDto } from './dto/update-deliverer.dto';
 import { PrismaService } from 'src/providers/prisma/prisma.service';
 import { DelivererPresenter } from './presenters/deliverer.presenter';
-import { DelivererDetailsPresenter } from './presenters/deliverer-details.presente';
+import { DelivererDetailsPresenter } from './presenters/deliverer-details.presenter';
 import { GetAllQuery } from './query/get-all.query';
 import { DelivererPaginatedPresenter } from './presenters/deliverer-paginated.presenter';
 import { Prisma } from 'generated/prisma/browser';
