@@ -14,9 +14,9 @@ type AppTableProps<T extends { id: string | number }> = {
   columns: ColumnDef<T>[]
   data: T[]
   isLoading: boolean
-  hasFilters?: boolean
-  emptyState?: React.ReactElement
-  noResultsState?: React.ReactElement
+  hasFilters: boolean
+  emptyState: React.ReactElement
+  noResultsState: React.ReactElement
 }
 
 export const AppTable = <T extends { id: string | number }>({

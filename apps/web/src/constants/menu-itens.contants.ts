@@ -28,8 +28,8 @@ export const menuItems: MenuItem[] = [
     icon: Store,
   },
   {
-    title: 'Produtos',
-    url: '/dashboard/product',
+    title: 'Entregadores',
+    url: '/dashboard/deliverer',
     icon: Package,
   },
   {
