@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { ChevronRight, PencilLine, Save, X } from 'lucide-react'
-import { useStoreDetails } from '../provider/store-details.provider'
+import { useDelivererDetails } from '../provider/deliverer-details.provider'
 
-export const StoreDetailsSidebar = () => {
+export const DelivererDetailsSidebar = () => {
   const {
     mode,
     changeModeHandler,
@@ -10,8 +10,8 @@ export const StoreDetailsSidebar = () => {
     currentTabKey,
     handleTabChange,
     isSubmitting,
-    openAlert,
-  } = useStoreDetails()
+    openAlertHandler,
+  } = useDelivererDetails()
 
   return (
     <div className="flex flex-col space-y-1 pr-4">
@@ -60,7 +60,7 @@ export const StoreDetailsSidebar = () => {
               type="button"
               className="w-full"
               variant={'outline'}
-              onClick={openAlert}
+              onClick={openAlertHandler}
             >
               <X /> Cancelar
             </Button>

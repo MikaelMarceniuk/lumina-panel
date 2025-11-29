@@ -1,6 +1,4 @@
 import { TabWrapper } from '@/components/layout/tab-wrapper'
-import { storeDetailsTabs } from '../constants/tabs.contants'
-import { useStoreDetails } from '../provider/store-details.provider'
 import {
   FormControl,
   FormField,
@@ -11,9 +9,19 @@ import {
 import { Input } from '@/components/ui/input'
 import { MaskedInput } from '@/components/masked-input'
 import { GeneralInfoTabSkeleton } from './general-info.tab.skeleton'
+import { useDelivererDetails } from '../provider/deliverer-details.provider'
+import { delivererDetailsTabs } from '../constants/tabs.contants'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { vehicleTypeLabel, vehicleTypeValues } from '@/types/vehicle-type.type'
 
 export const GeneralInfoTab = () => {
-  const { isReadMode, form, isFetching, isSubmitting } = useStoreDetails()
+  const { isReadMode, form, isFetching, isSubmitting } = useDelivererDetails()
 
   if (isFetching) {
     return <GeneralInfoTabSkeleton />
@@ -21,13 +29,13 @@ export const GeneralInfoTab = () => {
 
   return (
     <TabWrapper
-      title={storeDetailsTabs.generalInfo.title}
+      title={delivererDetailsTabs.generalInfo.title}
       className="space-y-4"
     >
       <div className="flex gap-4">
         <FormField
           control={form.control}
-          name="generalInfo.name"
+          name="name"
           render={({ field }) => (
             <FormItem className="flex-1">
               <FormLabel>Nome</FormLabel>
@@ -41,23 +49,7 @@ export const GeneralInfoTab = () => {
 
         <FormField
           control={form.control}
-          name="generalInfo.manager"
-          render={({ field }) => (
-            <FormItem className="flex-1">
-              <FormLabel>Responsável</FormLabel>
-              <FormControl>
-                <Input disabled={isSubmitting || isReadMode} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-
-      <div className="flex gap-4">
-        <FormField
-          control={form.control}
-          name="generalInfo.phone"
+          name="phone"
           render={({ field }) => (
             <FormItem className="flex-1">
               <FormLabel>Telefone</FormLabel>
@@ -73,19 +65,50 @@ export const GeneralInfoTab = () => {
             </FormItem>
           )}
         />
+      </div>
 
+      <div className="flex gap-4">
         <FormField
           control={form.control}
-          name="generalInfo.contactEmail"
+          name="plateNumber"
           render={({ field }) => (
             <FormItem className="flex-1">
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Número da placa</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="contato@empresa.com"
+                <Input disabled={isSubmitting || isReadMode} {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* // TODO Fix value */}
+        <FormField
+          control={form.control}
+          name="vehicleType"
+          render={({ field }) => (
+            <FormItem className="flex-1">
+              <FormLabel>Tipo de veículo</FormLabel>
+              <FormControl>
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
                   disabled={isSubmitting || isReadMode}
-                  {...field}
-                />
+                >
+                  <SelectTrigger
+                    disabled={isSubmitting || isReadMode}
+                    className="w-full"
+                  >
+                    <SelectValue placeholder="Selecione o tipo de veículo..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {vehicleTypeValues.map((type, i) => (
+                      <SelectItem key={i} value={type}>
+                        {vehicleTypeLabel(type)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>

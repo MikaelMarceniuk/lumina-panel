@@ -14,6 +14,7 @@ import { OrderDetailsScreen } from './components/screens/order-details/order-det
 import { StoreScreen } from './components/screens/store/store.screen'
 import { StoreDetailsScreen } from './components/screens/store-details/store-details.screen'
 import { DelivererScreen } from './components/screens/deliverer/deliverer.screen'
+import { DelivererDetailsScreen } from './components/screens/deliverer-details/deliverer-details.screen'
 
 const App = () => {
   return (
@@ -35,6 +36,10 @@ const App = () => {
                 <Route
                   path="/dashboard/deliverer"
                   element={<DelivererScreen />}
+                />
+                <Route
+                  path="/dashboard/deliverer/:id"
+                  element={<DelivererDetailsScreen />}
                 />
 
                 <Route path="/dashboard/product" element={<ProductScreen />} />

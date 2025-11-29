@@ -1,5 +1,12 @@
 import { useState, useMemo } from 'react'
 
+export type UseTabsReturn<T extends Record<string, any>, K extends keyof T> = {
+  currentTab: TabListItem<T, K>
+  currentTabKey: K
+  tabList: TabListItem<T, K>[]
+  handleTabChange: (key: K) => void
+}
+
 export type TabList<T extends Record<string, any>> = {
   key: keyof T
 } & T[keyof T]

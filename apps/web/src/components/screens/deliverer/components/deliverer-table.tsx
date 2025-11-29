@@ -14,8 +14,10 @@ import { Ellipsis, Eye, Trash2Icon } from 'lucide-react'
 import { useDeliverers } from '../providers/deliverer.provider'
 import { DelivererTableNoResult } from './deliverer-table.no-result'
 import { DelivererTableEmpty } from './deliverer-table.empty'
+import { useNavigate } from 'react-router'
 
 export const DelivererTable = () => {
+  const navigate = useNavigate()
   const { deliverers, pagination, isFetching, handlePageChange } =
     useDeliverers()
 
@@ -41,13 +43,15 @@ export const DelivererTable = () => {
     {
       key: 'id',
       title: '',
-      render: () => (
+      render: (val) => (
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Ellipsis />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate(`/dashboard/deliverer/${val}`)}
+            >
               <Eye className="text-black dark:text-white" /> Visualizar
             </DropdownMenuItem>
             <DropdownMenuItem variant="destructive">

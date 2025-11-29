@@ -23,13 +23,12 @@ import { formatDateToBrazil } from '@/lib/date-formatter.utils'
 import { emptyToUndefined } from '@/lib/empty-to-undefined.utils'
 import type { StorePaginated } from '@/types/store-paginated.type'
 import { StoreDetailsCancelAlert } from '../components/store-details.cancel-alert'
-
-type Mode = 'read' | 'update'
+import {
+  useDetailsPageMode,
+  type UseDetailsPageModeReturn,
+} from '@/hooks/use-details-page-mode.hook'
 
 type StoreDetailsContext = {
-  mode: Mode
-  handleChangeMode: (mode: Mode) => void
-
   store: StoreDetails | undefined
   isFetching: boolean
 
@@ -42,7 +41,7 @@ type StoreDetailsContext = {
   isSubmitting: boolean
 
   openAlert: () => void
-}
+} & UseDetailsPageModeReturn
 
 const StoreDetailsContext = createContext({} as StoreDetailsContext)
 
@@ -50,7 +49,7 @@ export const StoreDetailsProvider: React.FC<withChildren> = ({ children }) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { id } = useParams<{ id?: string }>()
-  const [mode, setMode] = useState<Mode>('read')
+  const detailsPageMode = useDetailsPageMode()
   const { tabList, currentTab, currentTabKey, handleTabChange } = useTabs<
     StoreDetailsTabs,
     StoreDetailsTabsKeys
@@ -146,13 +145,10 @@ export const StoreDetailsProvider: React.FC<withChildren> = ({ children }) => {
     async (data) => await mutateAsync(data)
   )
 
-  const handleChangeMode = (mode: Mode) => setMode(mode)
-
   return (
     <StoreDetailsContext.Provider
       value={{
-        mode,
-        handleChangeMode,
+        ...detailsPageMode,
 
         store,
         isFetching,
@@ -176,7 +172,7 @@ export const StoreDetailsProvider: React.FC<withChildren> = ({ children }) => {
         handleOpenChange={setAlertOpen}
         handleBack={() => setAlertOpen(false)}
         handleAction={() => {
-          setMode('read')
+          detailsPageMode.changeModeHandler('read')
           form.reset()
         }}
       />

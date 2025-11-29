@@ -13,8 +13,7 @@ import { Input } from '@/components/ui/input'
 import { AddressTabSkeleton } from './address.tab.skeleton'
 
 export const AddressTab = () => {
-  const { mode, form, isFetching, isSubmitting } = useStoreDetails()
-  const isReadMode = mode == 'read'
+  const { isReadMode, form, isFetching, isSubmitting } = useStoreDetails()
 
   if (isFetching) {
     return <AddressTabSkeleton />
